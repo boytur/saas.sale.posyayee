@@ -32,27 +32,26 @@ const App = () => {
   }, []);
 
   return (
-    <div>
-      <div className={`${isAuthenticated ? "flex" : ""}`}>
-        {isSidebarOpen && isAuthenticated ? <Sidebar toggleSidebar={toggleSidebar} /> : ''}
-        <div className={`${isAuthenticated ? "flex-grow" : ""}`}>
-          {isAuthenticated &&
-            <Navbar
-              toggleSidebar={toggleSidebar}
-              isSidebarOpen={isSidebarOpen}
-            />
-          }
-          <div className={`${isAuthenticated ? "w-full mx-auto p-1 bg-[#F9FAFB]" : ""}`}>
-            <Routes>
-              <Route index element={isAuthenticated ? <Sale /> : <Login />} />
-              <Route path="/history" element={isAuthenticated ? <Histories /> : <Login />} />
-              <Route path="/product" element={isAuthenticated ? <Product /> : <Login />} />
-              <Route path="/finance" element={isAuthenticated ? <Finance /> : <Login />} />
-              <Route path="/dashboard" element={isAuthenticated ? <Dashboard /> : <Login />} />
-              <Route path="/setting/account" element={isAuthenticated ? <Account /> : <Login />} />
-              <Route path="/setting/store" element={isAuthenticated ? <Store /> : <Login />} />
-            </Routes>
-          </div>
+    <div className="bg-[#F9FAFB]">
+      {isAuthenticated && <Navbar
+        isSidebarOpen={isSidebarOpen}
+        toggleSidebar={toggleSidebar} />}
+
+      <div className="flex md:gap-2">
+        {isAuthenticated &&
+          <div className="">
+            <Sidebar isSidebarOpen={isSidebarOpen} />
+          </div>}
+        <div className={` ${isAuthenticated && "w-full md:mt-2 md:mb-2"}`}>
+          <Routes>
+            <Route index element={isAuthenticated ? <Sale /> : <Login />} />
+            <Route path="/history" element={isAuthenticated ? <Histories /> : <Login />} />
+            <Route path="/product" element={isAuthenticated ? <Product /> : <Login />} />
+            <Route path="/finance" element={isAuthenticated ? <Finance /> : <Login />} />
+            <Route path="/dashboard" element={isAuthenticated ? <Dashboard /> : <Login />} />
+            <Route path="/setting/account" element={isAuthenticated ? <Account /> : <Login />} />
+            <Route path="/setting/store" element={isAuthenticated ? <Store /> : <Login />} />
+          </Routes>
         </div>
       </div>
     </div>
