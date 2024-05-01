@@ -8,4 +8,16 @@ const setUserUuid = (r_token) => {
     localStorage.setItem('uuid', r_token);
 }
 
-export { getUuid, setUserUuid };
+const getSidebarSetting = () => {
+    const setting = localStorage.getItem('sidebar');
+    if (setting === 'true') {
+        return true
+    }
+    return false;
+}
+
+const setSidebarSetting = (val) => {
+    localStorage.setItem('sidebar', val);
+}
+
+export { getUuid, setUserUuid, getSidebarSetting, setSidebarSetting };
