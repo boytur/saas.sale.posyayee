@@ -1,7 +1,8 @@
 /* eslint-disable react/prop-types */
 import { createContext, useContext, useMemo, useState, useEffect } from "react";
 import Axios from "../libs/Axios";
-import { setUserUuid } from "../libs/localStrage";
+import { setSidebarSetting, setUserUuid } from "../libs/localStrage";
+import Swal from "sweetalert2";
 
 const AuthContext = createContext();
 
@@ -28,8 +29,45 @@ const AuthProvider = ({ children }) => {
         checkAuthStatus();
     }, []);
 
+    const login = async (payload) => {
+        try {
+            const response = await Axios.post('/api/auth/login', payload);
+            if (response.status === 200) {
+                window.location.href = "/";
+                setUserUuid(response.data.uuid);
+                setSidebarSetting(true);
+            }
+        }
+        catch (error) {
+            console.log(error);
+            Swal.fire({
+                'icon': 'error',
+                'title': 'เกิดข้อผิดพลาด',
+                'text': error.response.data.message
+            })
+        }
+    }
+
+    const logout = async () => {
+        try {
+            const response = await Axios.delete('/api/auth/logout');
+            if (response.status === 200) {
+                window.location.href = "/";
+                localStorage.clear();
+            }
+        }
+        catch (error) {
+            console.log(error);
+            Swal.fire({
+                'icon': 'error',
+                'title': 'เกิดข้อผิดพลาด',
+                'text': error.response.data.message
+            })
+        }
+    }
+
     const contextValue = useMemo(
-        () => ({ user, authenticated }),
+        () => ({ user, authenticated, login, logout }),
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [user]
     );
