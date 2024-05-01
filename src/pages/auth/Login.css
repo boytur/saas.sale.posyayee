@@ -1,0 +1,43 @@
+.login-background {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    background: linear-gradient(290deg, #4c49ed 7.45%, #fc62ff 129.66%);
+    transition: background 0.3s ease-in-out, opacity 0.3s ease-in-out;
+  }
+  
+@keyframes backgroundAnimation {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes opacityAnimation {
+  0% {
+    opacity: 1;
+    background: linear-gradient(290deg, #4c49ed 7.45%, #fc62ff 129.66%);
+  }
+  50% {
+    opacity: 0.5;
+    background: linear-gradient(290deg, #fc62ff 7.45%, #4c49ed 129.66%);
+  }
+  100% {
+    opacity: 1;
+    background: linear-gradient(290deg, #4c49ed 7.45%, #fc62ff 129.66%);
+  }
+}
+
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type='number'] {
+  -moz-appearance: textfield; /* Firefox */
+}
