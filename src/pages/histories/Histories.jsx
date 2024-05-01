@@ -7,12 +7,12 @@ const StyledDiv = styled.div`
   }
 `;
 
-function Product() {
+function Histories() {
   return (
     <StyledDiv className="w-full bg-white rounded-md">
-      Product
+      Histories
     </StyledDiv>
   );
 }
 
-export default Product;
+export default Histories;

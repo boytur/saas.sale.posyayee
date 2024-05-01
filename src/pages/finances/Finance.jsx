@@ -7,12 +7,12 @@ const StyledDiv = styled.div`
   }
 `;
 
-function Product() {
+function Finance() {
   return (
     <StyledDiv className="w-full bg-white rounded-md">
-      Product
+      Finance
     </StyledDiv>
   );
 }
 
-export default Product;
+export default Finance;
