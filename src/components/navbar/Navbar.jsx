@@ -127,7 +127,7 @@ const Navbar = ({ toggleSidebar, isSidebarOpen }) => {
           </div>
         </div>
 
-        <div className="lg:hidden flex justify-around w-full max-w-screen-sm items-center absolute bottom-1 rounded-full mx-1">
+        <div className="lg:hidden flex justify-around w-full max-w-screen-sm items-center absolute bottom-4 rounded-full mx-1">
           <Link
             onClick={() => setOpenProfileMobile(false)}
             to="/"
