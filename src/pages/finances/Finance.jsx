@@ -8,6 +8,8 @@ const StyledDiv = styled.div`
 `;
 
 function Finance() {
+  document.title = "บัญชีลูกหนี้ 💸 POSYAYEE";
+  
   return (
     <StyledDiv className="w-full bg-white rounded-md">
       Finance

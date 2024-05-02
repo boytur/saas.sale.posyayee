@@ -9,6 +9,8 @@ const StyledDiv = styled.div`
 `;
 
 function Dashboard() {
+  document.title = "แดชบอร์ด 💸 POSYAYEE";
+  
   return (
     <StyledDiv className="w-full bg-white rounded-md">
       Dashboard

@@ -7,7 +7,10 @@ const StyledDiv = styled.div`
   }
 `;
 
+
 function Product() {
+  document.title = "จัดการสินค้า 💸 POSYAYEE";
+  
   return (
     <StyledDiv className="w-full bg-white rounded-md">
       Product

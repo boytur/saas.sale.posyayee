@@ -7,7 +7,10 @@ const StyledDiv = styled.div`
   }
 `;
 
+
 function Histories() {
+  document.title = "ประวัติการขาย 💸 POSYAYEE";
+  
   return (
     <StyledDiv className="w-full bg-white rounded-md">
       Histories
