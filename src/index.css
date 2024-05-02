@@ -19,4 +19,7 @@
   .border-primary {
     @apply border-[#4C49ED];
   }
+  .input-primary {
+    @apply bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[#4C49ED] focus:outline-none focus:border-[#4C49ED] focus:border-[2px] block w-full p-2.5;
+}
 }
