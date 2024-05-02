@@ -57,7 +57,7 @@ const Navbar = ({ toggleSidebar }) => {
                 <RiArrowDropDownLine size={12} />
                 {
                   isOpenProfileMobile && (
-                    <div className={`w-[20rem] absolute mt-2 right-2`} >
+                    <div className={`w-[20rem] absolute mt-2 right-2 z-50`} >
                       <div className="w-full bg-white border mt-3 px-3 pb-2 rounded-md shadow-2xl h-full">
                         <p className=" text-center text-sm my-2 font-bold text-[#33363F]">โปรไฟล์ของฉัน</p>
                         <hr />
