@@ -14,6 +14,7 @@ import { IoAnalyticsOutline } from "react-icons/io5";
 import { CiBoxes } from "react-icons/ci";
 import { MdHistory } from "react-icons/md";
 import { useLocation } from "react-router-dom";
+import checkRoutePermission from "../../libs/checkRoutePermission";
 
 
 // eslint-disable-next-line react/prop-types
@@ -28,7 +29,7 @@ const Navbar = ({ toggleSidebar }) => {
   // Function to determine active button class
   const getActiveButton = (route) => {
     return location.pathname === route
-      ? "bg-white text-[#4C49ED] rounded-sm border-b-4 border-[#4C49ED]"
+      ? "bg-white text-primary rounded-sm border-b-4 border-primary"
       : "";
   };
 
@@ -39,7 +40,7 @@ const Navbar = ({ toggleSidebar }) => {
         {/* Profile for moblile */}
         <div className="lg:hidden flex gap-2 h-[4rem] justify-between items-center w-full">
           <Link to="/" className=" cursor-pointer lg:hidden justify-center pl-2">
-            <span className="text-[2rem] font-bold text-[#4C49ED]">
+            <span className="text-[2rem] font-bold text-primary">
               POS
             </span>
             <span className="text-[2rem] font-bold text-black">YAYEE</span>
@@ -50,9 +51,9 @@ const Navbar = ({ toggleSidebar }) => {
             </div>
             <div className=" relative ">
               <img onClick={() => setOpenProfileMobile(prev => !prev)}
-                className=" w-[2.5rem] h-[2.5rem] mx-2 mt-1 object-cover border-[2px] rounded-full border-[#4C49ED]"
+                className=" w-[2.5rem] h-[2.5rem] mx-2 mt-1 object-cover border-[2px] rounded-full border-primary"
                 src={userDecode()?.user?.user_image || "https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png"} alt="" />
-              <div className="bg-white rounded-full left-9 mt-[-14px] border border-[#4C49ED] absolute ">
+              <div className="bg-white rounded-full left-9 mt-[-14px] border border-primary absolute ">
                 <RiArrowDropDownLine size={12} />
                 {
                   isOpenProfileMobile && (
@@ -60,8 +61,8 @@ const Navbar = ({ toggleSidebar }) => {
                       <div className="w-full bg-white border mt-3 px-3 pb-2 rounded-md shadow-2xl h-full">
                         <p className=" text-center text-sm my-2 font-bold text-[#33363F]">โปรไฟล์ของฉัน</p>
                         <hr />
-                        <div className="w-full h-[3rem] flex items-center gap-2 text-[#4C49ED] mt-2 mb-2">
-                          <MdOutlineStorefront className=" border rounded-full m-2 p-1 border-[#4C49ED]" size={40} />
+                        <div className="w-full h-[3rem] flex items-center gap-2 text-primary mt-2 mb-2">
+                          <MdOutlineStorefront className=" border rounded-full m-2 p-1 border-primary" size={40} />
                           <p className="font-bold text-xl" style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '230px' }}>
                             {(userDecode())?.user?.store?.store_name}
                           </p>
@@ -74,10 +75,10 @@ const Navbar = ({ toggleSidebar }) => {
                                 <p className="text-[1rem] text-white">{userDecode()?.user?.package.package_name}</p>
                               </div>
                               <div>
-                                <p className="text-[1rem] text-[#4C49ED]">คงเหลือ: <span className=" font-bold">{userDecode()?.user?.store.store_remaining}</span>  วัน</p>
+                                <p className="text-[1rem] text-primary">คงเหลือ: <span className=" font-bold">{userDecode()?.user?.store.store_remaining}</span>  วัน</p>
                               </div>
                             </div>
-                            <div className="border-[#4C49ED] border-[2px] rounded-full">
+                            <div className="border-primary border-[2px] rounded-full">
                               <img className='rounded-full w-[3rem] h-[3rem] object-cover' src={userDecode()?.user?.user_image || "https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png"} alt="" />
                             </div>
                             <div>
@@ -98,23 +99,23 @@ const Navbar = ({ toggleSidebar }) => {
                             </div>
                           </div>
                         </div>
-                        <button className="w-full flex items-center px-3 gap-2 h-12 mt-2 rounded-md text-black/70 hover:text-[#4C49ED] hover:bg-[#aba8ff4c]">
+                        <button className="w-full flex items-center px-3 gap-2 h-12 mt-2 rounded-md text-black/70 hover:text-primary hover:bg-[#aba8ff4c]">
                           <MdManageAccounts size={30} />
                           <p className="mt-1 text-md">ตั้งค่าบัญชี</p>
                         </button>
                         {
-                          (userDecode())?.user?.user_role === "owner" ? <button className="w-full flex items-center px-3 gap-2 h-12 mt-2 rounded-md text-black/70 hover:text-[#4C49ED] hover:bg-[#aba8ff4c]">
+                          (userDecode())?.user?.user_role === "owner" ? <button className="w-full flex items-center px-3 gap-2 h-12 mt-2 rounded-md text-black/70 hover:text-primary hover:bg-[#aba8ff4c]">
                             <MdPayment size={28} />
                             <p className="text-md">ค่าใช้จ่าย</p>
                           </button> : ""
                         }
                         {
-                          (userDecode())?.user?.user_role === "owner" ? <button className="w-full flex items-center px-3 gap-2 h-12 mt-2 rounded-md text-black/70 hover:text-[#4C49ED] hover:bg-[#aba8ff4c]">
-                            <IoSettingsSharp size={35} />
+                          (userDecode())?.user?.user_role !== "employee" ? <button className="w-full flex items-center px-3 gap-2 h-12 mt-2 rounded-md text-black/70 hover:text-primary hover:bg-[#aba8ff4c]">
+                            <IoSettingsSharp size={28} />
                             <p className="mt-1 text-md">ตั้งค่าร้านค้า</p>
                           </button> : ""
                         }
-                        <button onClick={() => logout()} className="w-full border flex justify-center gap-2 items-center border-[#4C49ED] h-12 mt-5 rounded-md text-black/70 hover:bg-[#4C49ED] hover:text-white">
+                        <button onClick={() => logout()} className="w-full border flex justify-center gap-2 items-center border-primary h-12 mt-5 rounded-md text-black/70 hover:bg-[#4C49ED] hover:text-white">
                           <TbLogout2 size={18} className="mt-[2px]" />
                           <p className="text-md">ออกจากระบบ</p>
                         </button>{/*  */}
@@ -126,73 +127,82 @@ const Navbar = ({ toggleSidebar }) => {
           </div>
         </div>
 
-        <div className="lg:hidden flex justify-around w-full max-w-screen-sm items-center absolute bottom-4 mx-1">
-          <Link
-            onClick={() => setOpenProfileMobile(false)}
-            to="/"
-            className={`h-[3rem] rounded-lg flex items-center gap-2 px-2 ${getActiveButton(
-              "/"
-            )} transition duration-500 ease-in-out`}
-          >
-            <div>
-              <MdOutlineStorefront size={35} />
-            </div>
-          </Link>
+        <div className="lg:hidden bg-white  w-full absolute bottom-0 mx-1 flex justify-center">
+          <div className="w-full flex justify-around max-w-screen-sm items-center mb-4">
+            {checkRoutePermission("/") &&
+              <Link
+                onClick={() => setOpenProfileMobile(false)}
+                to="/"
+                className={`h-[3rem] rounded-lg flex items-center gap-2 px-2 ${getActiveButton(
+                  "/"
+                )} transition duration-500 ease-in-out`}
+              >
+                <div>
+                  <MdOutlineStorefront size={35} />
+                </div>
+              </Link>}
 
-          <Link
-            onClick={() => setOpenProfileMobile(false)}
-            to="/history"
-            className={`h-[3rem] rounded-lg flex items-center gap-2 px-2 ${getActiveButton(
-              "/history"
-            )} transition duration-500 ease-in-out`}
-          >
-            <div>
-              <MdHistory size={35} />
-            </div>
+            {checkRoutePermission('/history') &&
+              <Link
+                onClick={() => setOpenProfileMobile(false)}
+                to="/history"
+                className={`h-[3rem] rounded-lg flex items-center gap-2 px-2 ${getActiveButton(
+                  "/history"
+                )} transition duration-500 ease-in-out`}
+              >
+                <div>
+                  <MdHistory size={35} />
+                </div>
+              </Link>}
 
-          </Link>
+            {checkRoutePermission('/product') &&
+              <Link
+                onClick={() => setOpenProfileMobile(false)}
+                to="/product"
+                className={`h-[3rem] rounded-lg flex items-center gap-2 px-2 ${getActiveButton(
+                  "/product"
+                )} transition duration-500 ease-in-out`}
+              >
+                <div>
+                  <CiBoxes size={35} />
+                </div>
+              </Link>
+            }
 
-          <Link
-            onClick={() => setOpenProfileMobile(false)}
-            to="/product"
-            className={`h-[3rem] rounded-lg flex items-center gap-2 px-2 ${getActiveButton(
-              "/product"
-            )} transition duration-500 ease-in-out`}
-          >
-            <div>
-              <CiBoxes size={35} />
-            </div>
-          </Link>
+            {checkRoutePermission('/finance') &&
+              <Link
+                onClick={() => setOpenProfileMobile(false)}
+                to="/finance"
+                className={`h-[3rem] rounded-lg flex items-center gap-2 px-2 ${getActiveButton(
+                  "/finance"
+                )} transition duration-500 ease-in-out`}
+              >
+                <div>
+                  <MdOutlineSupervisorAccount size={35} />
+                </div>
 
-          <Link
-            onClick={() => setOpenProfileMobile(false)}
-            to="/finance"
-            className={`h-[3rem] rounded-lg flex items-center gap-2 px-2 ${getActiveButton(
-              "/finance"
-            )} transition duration-500 ease-in-out`}
-          >
-            <div>
-              <MdOutlineSupervisorAccount size={35} />
-            </div>
+              </Link>}
 
-          </Link>
-          <Link
-            onClick={() => setOpenProfileMobile(false)}
-            to="/dashboard"
-            className={`h-[3rem] rounded-lg flex items-center gap-2 px-2 ${getActiveButton(
-              "/dashboard"
-            )} transition duration-500 ease-in-out`}
-          >
-            <div>
-              <IoAnalyticsOutline size={35} />
-            </div>
-          </Link>
+            {checkRoutePermission('/dashboard') &&
+              <Link
+                onClick={() => setOpenProfileMobile(false)}
+                to="/dashboard"
+                className={`h-[3rem] rounded-lg flex items-center gap-2 px-2 ${getActiveButton(
+                  "/dashboard"
+                )} transition duration-500 ease-in-out`}
+              >
+                <div>
+                  <IoAnalyticsOutline size={35} />
+                </div>
+              </Link>
+            }
+          </div>
         </div>
 
         <div className=" flex justify-center ">
 
           <Link to="/" className="cursor-pointer lg:flex hidden justify-center w-full pl-2 mt-[1px]">
-            <span className="text-[2rem] font-bold text-[#4C49ED]">
+            <span className="text-[2rem] font-bold text-primary">
               POS
             </span>
             <span className="text-[2rem] font-bold text-black">YAYEE</span>
@@ -207,23 +217,23 @@ const Navbar = ({ toggleSidebar }) => {
 
         <div className="hidden lg:flex mr-5 gap-5">
           <div className="flex items-center mt-1">
-            <IoNotifications size={35} />
+            <IoNotifications size={25} />
           </div>
           <div className="relative cursor-pointer">
             <img
               onClick={() => setOpenProfileDestop(prev => !prev)}
               className='rounded-full hover:brightness-90 w-[2.3rem] h-[2.3rem] object-cover'
               src={userDecode()?.user?.user_image || "https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png"} alt="" />
-            <div className="bg-white rounded-full left-6 mt-[-16px] border border-[#4C49ED] absolute ">
+            <div className="bg-white rounded-full left-6 mt-[-16px] border border-primary absolute ">
               <RiArrowDropDownLine size={15} />
             </div>
 
             {isOpenProfileDestop && userDecode() !== null && (
-              <div className={`w-[22rem] left-[-20rem] mt-3 rounded-md shadow-xl ${(userDecode())?.user?.user_role === "employee" ? "h-[35rem]" : "h-[32rem]"} absolute px-2`}>
+              <div className={`w-[22rem] left-[-20rem] mt-5 rounded-md shadow-xl ${userDecode()?.user?.user_role === "owner" ? "h-[32rem]" : userDecode()?.user?.user_role === "manager" ? "h-[28.5rem]" : "h-[25rem]"} absolute px-2`}>
                 <p className=" text-center text-sm my-2 font-bold text-[#33363F]">โปรไฟล์ของฉัน</p>
                 <hr />
-                <div className=" w-full h-[3rem] flex items-center gap-2 text-[#4C49ED] mt-2 mb-2">
-                  <MdOutlineStorefront className=" border rounded-full m-2 p-1 border-[#4C49ED]" size={40} />
+                <div className=" w-full h-[3rem] flex items-center gap-2 text-primary mt-2 mb-2">
+                  <MdOutlineStorefront className=" border rounded-full m-2 p-1 border-primary" size={40} />
                   <p className="font-bold text-xl" style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '230px' }}>
                     {(userDecode())?.user?.store?.store_name}
                   </p>
@@ -236,10 +246,10 @@ const Navbar = ({ toggleSidebar }) => {
                         <p className="text-[1rem] text-white">{userDecode()?.user?.package.package_name}</p>
                       </div>
                       <div>
-                        <p className="text-[1rem] text-[#4C49ED]">คงเหลือ: <span className=" font-bold">{userDecode()?.user?.store.store_remaining}</span>  วัน</p>
+                        <p className="text-[1rem] text-primary">คงเหลือ: <span className=" font-bold">{userDecode()?.user?.store.store_remaining}</span>  วัน</p>
                       </div>
                     </div>
-                    <div className="border-[#4C49ED] border-[2px] rounded-full">
+                    <div className="border-primary border-[2px] rounded-full">
                       <img className='rounded-full w-[3rem] h-[3rem] object-cover' src={userDecode()?.user?.user_image || "https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png"} alt="" />
                     </div>
                     <div>
@@ -261,23 +271,23 @@ const Navbar = ({ toggleSidebar }) => {
                   </div>
                 </div>
 
-                <button className="w-full flex items-center px-3 gap-2 h-12 mt-2 rounded-md text-black/70 hover:text-[#4C49ED] hover:bg-[#aba8ff4c]">
+                <button className="w-full flex items-center px-3 gap-2 h-12 mt-2 rounded-md text-black/70 hover:text-primary hover:bg-[#aba8ff4c]">
                   <MdManageAccounts size={30} />
                   <p className="mt-1 text-md">ตั้งค่าบัญชี</p>
                 </button>
                 {
-                  (userDecode())?.user?.user_role === "owner" ? <button className="w-full flex items-center px-3 gap-2 h-12 mt-2 rounded-md text-black/70 hover:text-[#4C49ED] hover:bg-[#aba8ff4c]">
+                  (userDecode())?.user?.user_role === "owner" ? <button className="w-full flex items-center px-3 gap-2 h-12 mt-2 rounded-md text-black/70 hover:text-primary hover:bg-[#aba8ff4c]">
                     <MdPayment size={28} />
                     <p className="text-md">ค่าใช้จ่าย</p>
                   </button> : ""
                 }
                 {
-                  (userDecode())?.user?.user_role === "owner" ? <button className="w-full flex items-center px-3 gap-2 h-12 mt-2 rounded-md text-black/70 hover:text-[#4C49ED] hover:bg-[#aba8ff4c]">
-                    <IoSettingsSharp size={35} />
+                  (userDecode())?.user?.user_role !== "employee" ? <button className="w-full flex items-center px-3 gap-2 h-12 mt-2 rounded-md text-black/70 hover:text-primary hover:bg-[#aba8ff4c]">
+                    <IoSettingsSharp size={28} />
                     <p className="mt-1 text-md">ตั้งค่าร้านค้า</p>
                   </button> : ""
                 }
-                <button onClick={() => logout()} className="w-full border flex justify-center gap-2 items-center border-[#4C49ED] h-12 mt-5 rounded-md text-black/70 hover:bg-[#4C49ED] hover:text-white">
+                <button onClick={() => logout()} className="w-full border flex justify-center gap-2 items-center border-primary h-12 mt-5 rounded-md text-black/70 hover:bg-[#4C49ED] hover:text-white">
                   <TbLogout2 size={18} className="mt-[2px]" />
                   <p className="text-md">ออกจากระบบ</p>
                 </button>
