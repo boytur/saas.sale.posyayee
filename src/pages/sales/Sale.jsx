@@ -4,6 +4,7 @@ import Scan from "./Scan";
 import Axios from "../../libs/Axios";
 import { useEffect, useState } from "react";
 import { useAuth } from "../../contexts/AuthProvider";
+import Swal from "sweetalert2";
 
 const StyledDiv = styled.div`
   height: calc(100vh - 5rem); /* Default height */  
@@ -18,19 +19,25 @@ function Sale() {
   const { authenticated } = useAuth();
 
   const [products, setProducts] = useState();
+  const [categories, setCategories] = useState();
 
   const fecthAllProducts = async () => {
     try {
       const response = await Axios.get(`/api/product/all-products`);
       if (response.status === 200) {
         setProducts(response.data.products);
+        setCategories(response.data.categories);
       }
     }
     catch (e) {
-      console.error(e);
+      Swal.fire({
+        title: 'เกิดข้อผิดพลาด',
+        icon: 'error',
+        text: e?.response?.data?.message,
+      })
     }
   }
-
+  
   useEffect(() => {
     if (!authenticated) { return; }
     fecthAllProducts();
@@ -38,7 +45,9 @@ function Sale() {
 
   return (
     <StyledDiv className="w-full flex gap-1">
-      <Product products={products} />
+      <Product
+        categories={categories}
+        products={products} />
       <Scan />
     </StyledDiv>
   );
