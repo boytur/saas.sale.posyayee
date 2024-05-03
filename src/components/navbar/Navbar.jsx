@@ -38,7 +38,7 @@ const Navbar = ({ toggleSidebar }) => {
       <div className="w-full mx-auto lg:flex lg:flex-row flex flex-col justify-between items-center ">
 
         {/* Profile for moblile */}
-        <div className="lg:hidden flex gap-2 h-[4rem] justify-between items-center w-full">
+        <div className="lg:hidden flex gap-2 h-[4rem] justify-between items-center w-full z-50">
           <Link to="/" className=" cursor-pointer lg:hidden justify-center pl-2">
             <span className="text-[2rem] font-bold text-primary">
               POS
@@ -229,7 +229,7 @@ const Navbar = ({ toggleSidebar }) => {
             </div>
 
             {isOpenProfileDestop && userDecode() !== null && (
-              <div className={`w-[22rem] left-[-20rem] mt-5 rounded-md shadow-xl ${userDecode()?.user?.user_role === "owner" ? "h-[32rem]" : userDecode()?.user?.user_role === "manager" ? "h-[28.5rem]" : "h-[25rem]"} absolute px-2`}>
+              <div className={`w-[22rem] left-[-20rem] mt-5 z-50 bg-white  rounded-md shadow-xl ${userDecode()?.user?.user_role === "owner" ? "h-[32rem]" : userDecode()?.user?.user_role === "manager" ? "h-[28.5rem]" : "h-[25rem]"} absolute px-2`}>
                 <p className=" text-center text-sm my-2 font-bold text-[#33363F]">โปรไฟล์ของฉัน</p>
                 <hr />
                 <div className=" w-full h-[3rem] flex items-center gap-2 text-primary mt-2 mb-2">
