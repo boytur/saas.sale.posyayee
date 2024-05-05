@@ -29,7 +29,7 @@ class Permission {
         return false;
     }
 
-    canViewStock() {
+    canViewProduct() {
         if ((this.role === 'owner' || this.role === 'employee' || this.role === 'manager') && this.user_acc_verify) {
             return true;
         }
