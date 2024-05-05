@@ -9,7 +9,7 @@ const checkRoutePermission = (route) => {
         case "/history":
             return permission.canViewHistory();
         case "/product":
-            return permission.canViewStock();
+            return permission.canViewProduct();
         case "/finance":
             return permission.canViewFinance();
         case "/dashboard":
