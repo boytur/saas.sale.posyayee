@@ -12,6 +12,7 @@ import Store from "./pages/settings/stores/Store";
 import Login from "./pages/auth/Login";
 import { getSidebarSetting, getUuid, setSidebarSetting } from "./libs/localStrage";
 import checkRoutePermission from "./libs/checkRoutePermission";
+import AddProduct from "./pages/products/AddProduct";
 
 const App = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(getSidebarSetting());
@@ -45,6 +46,7 @@ const App = () => {
             <Route index element={isAuthenticated ? <Sale /> : <Login />} />
             <Route path="/history" element={isAuthenticated && checkRoutePermission("/history") ? <Histories /> : <Navigate to="/" />} />
             <Route path="/product" element={isAuthenticated && checkRoutePermission("/product") ? <Product /> : <Navigate to="/" />} />
+            <Route path="/product/add-product" element={isAuthenticated && checkRoutePermission("/product") ? <AddProduct /> : <Navigate to="/" />} />
             <Route path="/finance" element={isAuthenticated && checkRoutePermission("/finance") ? <Finance /> : <Navigate to="/" />} />
             <Route path="/dashboard" element={isAuthenticated && checkRoutePermission("/dashboard") ? <Dashboard /> : <Navigate to="/" />} />
             <Route path="/setting/account" element={isAuthenticated && checkRoutePermission("/setting/account") ? <Account /> : <Navigate to="/" />} />
