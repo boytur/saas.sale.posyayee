@@ -15,6 +15,13 @@ class Permission {
         return false;
     }
 
+    canGetOrderOpenOrder() {
+        if (this.role === "owner" && this.user_acc_verify) {
+            return true;
+        }
+        return false;
+    }
+
     canLogout() {
         if (this.user_acc_verify) {
             return true;
