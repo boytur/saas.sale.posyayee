@@ -9,6 +9,8 @@ import { MdOutlineNavigateBefore } from "react-icons/md";
 import { LuPencilLine } from "react-icons/lu";
 import { RiDeleteBin5Line } from "react-icons/ri";
 import Barcode from 'react-barcode';
+import { Link } from "react-router-dom";
+import formatUTCtoThai from "../../libs/formatUTCtoThai";
 
 function AllProduct() {
     const { authenticated } = useAuth();
@@ -16,6 +18,7 @@ function AllProduct() {
 
     const [pageState, setPageState] = useState({
         data: [],
+        category: [],
         page: 1,
         pageSize: 10,
         total: 0,
@@ -45,6 +48,7 @@ function AllProduct() {
                     setPageState((prev) => ({
                         ...prev,
                         data: response.data.products,
+                        category: response.data.category,
                         total: response.data.total,
                         loading: false,
                     }));
@@ -52,6 +56,10 @@ function AllProduct() {
             }
         } catch (error) {
             console.error(error);
+            setPageState((prev) => ({
+                ...prev,
+                loading: false,
+            }));
             Swal.fire({
                 icon: "error",
                 title: "เกิดข้อผิดพลาด",
@@ -108,19 +116,22 @@ function AllProduct() {
                         <div className="md:flex justify-between  rounded-t-lg bg-white">
                             <div className="md:flex my-6 items-center mx-2">
                                 <div className="md:px-2 w-full md:w-[23rem] ">
-                                    <label htmlFor="" className="text-sm text-black/80 ml-1">ค้นหา</label>
+                                    <label htmlFor="" className="text-[0.7rem] text-black/80 ml-1">ค้นหา</label>
                                     <input type="text" placeholder="กรอกรายละเอียด..." className="input-primary " name="" id="" />
                                 </div>
                                 <div className="flex flex-col md:mr-2">
-                                    <label htmlFor="" className="text-sm text-black/80 ml-1 mt-1">ประเภท</label>
+                                    <label htmlFor="" className="text-[0.7rem] text-black/80 ml-1 mt-1">ประเภท</label>
                                     <select name="" className="input-primary cursor-pointer" id="">
-                                        <option value="">ล่าสุด</option>
+                                        <option value="">ทั้งหมด</option>
+                                        {pageState?.category?.map((category) =>
+                                            <option key={category.cat_id} value={category.cat_id}>{category.cat_name}</option>
+                                        )}
                                     </select>
                                 </div>
                                 <div className="flex flex-col md:mr-2">
-                                    <label htmlFor="" className="text-sm text-black/80 md:ml-1 mt-1">ค้นหาด้วย</label>
+                                    <label htmlFor="" className="text-[0.7rem] text-black/80 md:ml-1 mt-1">ค้นหาด้วย</label>
                                     <select name="" className="input-primary cursor-pointer" id="">
-                                        <option value="">ล่าสุด</option>
+                                        <option value="">ทั้งหมด</option>
                                         <option value="">ชื่อ</option>
                                         <option value="">บาร์โค้ด</option>
                                         <option value="">ราคาซื้อ</option>
@@ -129,9 +140,9 @@ function AllProduct() {
                                     </select>
                                 </div>
                                 <div className="flex flex-col md:mr-2">
-                                    <label htmlFor="" className="text-sm text-black/80 ml-1 mt-1">เรียงตาม</label>
+                                    <label htmlFor="" className="text-[0.7rem] text-black/80 ml-1 mt-1">เรียงจาก</label>
                                     <select name="" className="input-primary cursor-pointer" id="">
-                                        <option value="">ล่าสุด</option>
+                                        <option value="">ทั้งหมด</option>
                                         <option value="">มากไปน้อย</option>
                                         <option value="">น้อยไปมาก</option>
                                     </select>
@@ -139,7 +150,7 @@ function AllProduct() {
 
                                 <div className="">
                                     <label htmlFor="" className="text-white">.</label>
-                                    <button className="btn-primary w-full justify-center py-2 px-5 flex items-center gap-1">
+                                    <button className="btn-primary w-full justify-center py-[7px] mb-1 px-5 flex items-center gap-1">
                                         <p>ค้นหา</p>
                                         <IoSearch className="mt-[1px]" />
                                     </button>
@@ -175,15 +186,17 @@ function AllProduct() {
                                         <th className="px-3 rounded-tl-lg">
                                             <input type="checkbox" className="cursor-pointer md:w-4 md:h-4" checked={selectAll} onChange={toggleSelectAll} ref={selectAllRef} />
                                         </th>
-                                        <th className="px-3 rounded-tl-lg">ลำดับ</th>
-                                        <th className="px-3">รูปภาพ</th>
-                                        <th className="md:px-3 px-20">ชื่อ</th>
-                                        <th className="px-3">บาร์โค้ด</th>
-                                        <th className="px-3">ประเภท</th>
-                                        <th className="md:px-3 px-5">ต้นทุน</th>
-                                        <th className="px-3">ราคาขาย</th>
-                                        <th className="px-3">คงเหลือ</th>
-                                        <th className="px-3 rounded-tr-lg">การกระทำ</th>
+                                        <th className="rounded-tl-lg">ลำดับ</th>
+                                        <th className="w-[50px] h-[50px]">รูปภาพ</th>
+                                        <th>ชื่อ</th>
+                                        <th>บาร์โค้ด</th>
+                                        <th>ประเภท</th>
+                                        <th>สถานะ</th>
+                                        <th>ต้นทุน</th>
+                                        <th>ราคาขาย</th>
+                                        <th>คงเหลือ</th>
+                                        <th>เพิ่มเมื่อ</th>
+                                        <th className="rounded-tr-lg">การกระทำ</th>
                                     </tr>
                                 </thead>
                                 <tbody className="bg-white">
@@ -194,21 +207,31 @@ function AllProduct() {
                                             </td>
                                             <td className="px-3 py-1">{index + 1}</td>
                                             <td className="px-3 py-1">
-                                                <div className="flex justify-center items-center">
+                                                <div className="flex justify-center w-[50px] h-[50px] items-center">
                                                     <img src={product.prod_image} alt="product" className="w-[50px] h-[50px] rounded-sm object-cover" />
                                                 </div>
                                             </td>
                                             <td className="px-3 py-1 truncate">{product.prod_name}</td>
                                             <td className="px-3 py-1 ">
                                                 <div className="flex justify-center items-center z-0">
-                                                    {product.prod_barcode !== "" &&
-                                                        <Barcode className="w-[90px] h-[50px]" value={product.prod_barcode.toString()} />}
+                                                    {product.prod_barcode !== "" ?
+                                                        <Barcode className="w-[90px] h-[50px]" value={product.prod_barcode.toString()} />
+                                                        : <div className="text-black/70 text-sm">ไม่มี</div>
+                                                    }
                                                 </div>
                                             </td>
                                             <td className="px-3 py-1">{product?.category?.cat_name}</td>
+                                            <td className="px-3 py-1">
+                                                <div className="toggle-switch">
+                                                    <input type="checkbox" id="statusToggle" className="toggle-input" checked={product?.prod_status === 'active'}/>
+                                                    <label htmlFor="statusToggle" className="toggle-label"></label>
+                                                </div>
+                                            </td>
+
                                             <td className="px-3 text-lg py-1 font-bold text-[#4C49ED]">฿{product.prod_cost}</td>
                                             <td className="px-3 text-lg py-1 font-bold text-green-600">฿{product.prod_sale}</td>
-                                            <td className="px-3 text-lg py-1">{product.prod_quantity}</td>
+                                            <td className="px-3 text-lg py-1">{product.prod_quantity} ({product?.product_unit?.unit_name})</td>
+                                            <td className="px-3 text-sm py-1">{formatUTCtoThai(product?.createdAt)}</td>
                                             <td className="px-3 py-1 ">
                                                 <div className="flex justify-center gap-2 items-center rounded-md">
                                                     <div className="border p-1 rounded-md flex items-center justify-center">
@@ -225,42 +248,49 @@ function AllProduct() {
                                 </tbody>
                             </table>
                         </div>
-                        <div className="mt-4 flex flex-col gap-2 justify-center items-center">
-                            <div className="mt-2">
-                                สินค้าทั้งหมด {pageState.total} อย่าง
-                            </div>
-                            <div className="mb-12">
-                                <button
-                                    onClick={() => setPageState((prevState) => ({ ...prevState, page: Math.max(1, prevState.page - 1) }))}
-                                    disabled={pageState.page === 1}
-                                    className="font-bold py-2 px-3 rounded-md border">
-                                    <MdOutlineNavigateBefore />
-                                </button>
-                                <span className="ml-2">
-                                    {Array.from({ length: Math.min(6, totalPages) }, (_, i) => {
-                                        const pageNumber = i + 1;
-                                        return (
-                                            <button
-                                                key={pageNumber}
-                                                onClick={() => setPageState((prevState) => ({ ...prevState, page: pageNumber }))}
-                                                className={`py-2 px-3 rounded-md border ${pageNumber === pageState.page ? 'bg-[#E4E3FF] text-primary' : ''}`}>
-                                                {pageNumber}
-                                            </button>
-                                        );
-                                    })}
-                                    {totalPages > 6 && <span className="py-2 px-3">...</span>}
-                                </span>
-                                <button
-                                    onClick={() =>
-                                        setPageState((prevState) => ({ ...prevState, page: Math.min(totalPages, prevState.page + 1) }))
-                                    }
-                                    disabled={pageState.page === totalPages}
-                                    className="font-bold py-2 px-3 rounded-md ml-2 border">
-                                    <MdOutlineNavigateNext />
-                                </button>
-                            </div>
-                        </div>
+                        {pageState.total > 0 ?
 
+                            <div className="mt-4 flex flex-col gap-2 justify-center items-center pb-12">
+                                <div className="mt-2">
+                                    สินค้าทั้งหมด {pageState.total} อย่าง
+                                </div>
+                                <div className="mb-12">
+                                    <button
+                                        onClick={() => setPageState((prevState) => ({ ...prevState, page: Math.max(1, prevState.page - 1) }))}
+                                        disabled={pageState.page === 1}
+                                        className="font-bold py-2 px-3 rounded-md border">
+                                        <MdOutlineNavigateBefore />
+                                    </button>
+                                    <span className="ml-2">
+                                        {Array.from({ length: Math.min(6, totalPages) }, (_, i) => {
+                                            const pageNumber = i + 1;
+                                            return (
+                                                <button
+                                                    key={pageNumber}
+                                                    onClick={() => setPageState((prevState) => ({ ...prevState, page: pageNumber }))}
+                                                    className={`py-2 px-3 rounded-md border ${pageNumber === pageState.page ? 'bg-[#E4E3FF] text-primary' : ''}`}>
+                                                    {pageNumber}
+                                                </button>
+                                            );
+                                        })}
+                                        {totalPages > 6 && <span className="py-2 px-3">...</span>}
+                                    </span>
+                                    <button
+                                        onClick={() =>
+                                            setPageState((prevState) => ({ ...prevState, page: Math.min(totalPages, prevState.page + 1) }))
+                                        }
+                                        disabled={pageState.page === totalPages}
+                                        className="font-bold py-2 px-3 rounded-md ml-2 border">
+                                        <MdOutlineNavigateNext />
+                                    </button>
+                                </div>
+                            </div>
+                            :
+                            <div className="w-full flex flex-col items-center mt-5 justify-center">
+                                <p>ร้านของคุณยังไม่มีสินค้าค่ะ</p>
+                                <Link className="mt-5 underline text-red-500" to="/product/add-product">เพิ่มสินค้า</Link>
+                            </div>
+                        }
                     </>
             }
         </>

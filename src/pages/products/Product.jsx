@@ -5,6 +5,8 @@ import AllProduct from "./AllProduct";
 import OutStock from "./OutStock";
 import NewProduct from "./NewProduct";
 import { IoPrint } from "react-icons/io5";
+import { Link } from "react-router-dom";
+import InActiveProduct from "./InActiveProduct";
 
 const StyledDiv = styled.div`
   height: calc(100vh - 5rem); /* Default height */
@@ -20,7 +22,8 @@ function Product() {
   const [pageState, setPageState] = useState({
     showAllProduct: true,
     showOutStock: false,
-    showNewProduct: false
+    showNewProduct: false,
+    showInActiveProduct: false
   });
 
   return (
@@ -36,30 +39,35 @@ function Product() {
               <p className="text-[0.7rem] text-black/80">พิมพ์บาร์โค้ด</p>
             </div>
             <div>
-              <button className="btn-primary py-3 flex gap-1 items-center px-3 ">
+              <Link to="/product/add-product" className="btn-primary py-3 flex gap-1 items-center px-3 ">
                 <p className=" text-sm">เพิ่มสินค้า</p>
                 <AiFillPlusCircle className="mt-[2px]" />
-              </button>
+              </Link>
             </div>
-            
+
           </div>
         </div>
         <div className="mt-2 bg-white rounded-md px-2">
           <div className="flex pt-4">
             <button
-              className={` py-2 ${pageState.showAllProduct ? 'border-b-4 border-[#4C49ED]' : ''}`}
-              onClick={() => setPageState(prevState => ({ ...prevState, showAllProduct: true, showOutStock: false, showNewProduct: false }))}>
+              className={` py-2 ${pageState.showAllProduct ? 'border-b-4 border-[#4C49ED] text-primary' : ''}`}
+              onClick={() => setPageState(prevState => ({ ...prevState, showAllProduct: true, showOutStock: false, showNewProduct: false, showInActiveProduct: false }))}>
               สินค้าทั้งหมด
             </button>
             <button
-              className={`mx-2 py-2 px-4  ${pageState.showOutStock ? 'border-b-4 border-[#4C49ED]' : ''}`}
-              onClick={() => setPageState(prevState => ({ ...prevState, showAllProduct: false, showOutStock: true, showNewProduct: false }))}>
+              className={`mx-2 py-2 px-4  ${pageState.showOutStock ? 'border-b-4 border-[#4C49ED] text-primary' : ''}`}
+              onClick={() => setPageState(prevState => ({ ...prevState, showAllProduct: false, showOutStock: true, showNewProduct: false, showInActiveProduct: false }))}>
               สินค้าใกล้หมด
             </button>
             <button
-              className={`mx-2 py-2 px-4  ${pageState.showNewProduct ? 'border-b-4 border-[#4C49ED]' : ''}`}
-              onClick={() => setPageState(prevState => ({ ...prevState, showAllProduct: false, showOutStock: false, showNewProduct: true }))}>
+              className={`mx-2 py-2 px-4  ${pageState.showNewProduct ? 'border-b-4 border-[#4C49ED] text-primary' : ''}`}
+              onClick={() => setPageState(prevState => ({ ...prevState, showAllProduct: false, showOutStock: false, showNewProduct: true, showInActiveProduct: false }))}>
               สินค้าใหม่
+            </button>
+            <button
+              className={`mx-2 py-2 px-4  ${pageState.showInActiveProduct ? 'border-b-4 border-[#4C49ED] text-primary' : ''}`}
+              onClick={() => setPageState(prevState => ({ ...prevState, showAllProduct: false, showOutStock: false, showNewProduct: false, showInActiveProduct: true }))}>
+              สินค้าปิดใช้งาน
             </button>
           </div>
           <hr />
@@ -67,6 +75,7 @@ function Product() {
         {pageState.showAllProduct && <AllProduct />}
         {pageState.showOutStock && <OutStock />}
         {pageState.showNewProduct && <NewProduct />}
+        {pageState.showInActiveProduct && <InActiveProduct />}
       </div>
     </StyledDiv>
   );

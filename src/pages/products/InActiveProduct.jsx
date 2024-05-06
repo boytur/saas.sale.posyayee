@@ -12,7 +12,7 @@ import Barcode from 'react-barcode';
 import { Link } from "react-router-dom";
 import formatUTCtoThai from "../../libs/formatUTCtoThai";
 
-function OutStock() {
+function InActiveProduct() {
     const { authenticated } = useAuth();
     const permission = new Permission();
 
@@ -38,7 +38,7 @@ function OutStock() {
             }));
 
             if (authenticated && permission.canViewProduct()) {
-                const response = await Axios.get("/api/product/outstock-products", {
+                const response = await Axios.get("/api/product/inactive-products", {
                     params: {
                         page: pageState.page,
                         perPage: pageState.pageSize,
@@ -252,7 +252,7 @@ function OutStock() {
 
                             <div className="mt-4 flex flex-col gap-2 justify-center items-center pb-12">
                                 <div className="mt-2">
-                                    สินค้าใกล้หมด {pageState.total} อย่าง
+                                    สินค้าที่ปิดใช้งาน {pageState.total} อย่าง
                                 </div>
                                 <div className="mb-12">
                                     <button
@@ -297,4 +297,4 @@ function OutStock() {
     )
 }
 
-export default OutStock
+export default InActiveProduct
