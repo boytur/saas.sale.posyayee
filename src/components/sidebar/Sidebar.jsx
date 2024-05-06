@@ -50,7 +50,7 @@ const Sidebar = ({ isSidebarOpen }) => {
           </Link>
         )}
         {checkRoutePermission("/product") && (
-          <Link to="/product" className={`h-[3rem] rounded-lg flex ${isSidebarOpen && "justify-center"} items-center gap-2 px-2 hover:bg-[#E4E3FF] hover:text-primary hover:border-primary ${getActiveButton("/product")}`}>
+          <Link to="/product" className={`h-[3rem] rounded-lg flex ${isSidebarOpen && "justify-center"} items-center gap-2 px-2 hover:bg-[#E4E3FF] hover:text-primary hover:border-primary ${getActiveButton("/product") || getActiveButton("/product/add-product")}`}>
             <div>
               <CiBoxes size={25} />
             </div>
