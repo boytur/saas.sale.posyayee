@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { FiMenu } from "react-icons/fi";
 import { RiArrowDropDownLine } from "react-icons/ri";
 import { IoNotifications, IoSettingsSharp } from "react-icons/io5";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import userDecode from "../../libs/userDecode";
 import { MdOutlineStorefront } from "react-icons/md";
 import { MdManageAccounts } from "react-icons/md";
@@ -15,6 +15,8 @@ import { CiBoxes } from "react-icons/ci";
 import { MdHistory } from "react-icons/md";
 import { useLocation } from "react-router-dom";
 import checkRoutePermission from "../../libs/checkRoutePermission";
+import Permission from "../../libs/Permission";
+import Axios from "../../libs/Axios";
 
 
 // eslint-disable-next-line react/prop-types
@@ -23,7 +25,10 @@ const Navbar = ({ toggleSidebar }) => {
   const [isOpenProfileDestop, setOpenProfileDestop] = useState(false);
   const [isOpenProfileMobile, setOpenProfileMobile] = useState(false);
 
+  const [order, setOrder] = useState();
+
   const { logout } = useAuth();
+  const { authenticated } = useAuth();
   const location = useLocation();
 
   // Function to determine active button class
@@ -32,6 +37,26 @@ const Navbar = ({ toggleSidebar }) => {
       ? "bg-white text-primary rounded-sm border-b-4 border-primary"
       : "";
   };
+
+  const getOpenOrder = async () => {
+    try {
+      const permission = new Permission();
+      if (permission.canGetOrderOpenOrder()) {
+        const response = await Axios.get('/api/payment/get-open-order');
+        if (response.status === 200) {
+          setOrder(response.data.order);
+        }
+      }
+    }
+    catch (err) {
+      console.error(err);
+    }
+  }
+
+  useEffect(() => {
+    if (!authenticated) { return; }
+    getOpenOrder();
+  }, [authenticated]);
 
   return (
     <nav className="bg-white lg:h-[4rem]  flex items-center border ">
@@ -46,7 +71,12 @@ const Navbar = ({ toggleSidebar }) => {
             <span className="text-[2rem] font-bold text-black">YAYEE</span>
           </Link>
           <div className=" flex items-center">
-            <div className="flex items-center mt-2">
+            <div className="flex items-center mt-2 mr-3 hover:scale-105">
+              {order &&
+                <div className="absolute bg-red-500 mb-4 ml-4 text-white rounded-full w-4 h-4 flex items-center justify-center ">
+                  1
+                </div>
+              }
               <IoNotifications size={30} />
             </div>
             <div className=" relative ">
@@ -216,18 +246,24 @@ const Navbar = ({ toggleSidebar }) => {
         </div>
 
         <div className="hidden lg:flex mr-5 gap-5">
-          <div className="flex items-center mt-1">
-            <IoNotifications size={25} />
+          <div className="flex items-center mt-2 relative cursor-pointer hover:scale-105">
+            {order &&
+              <div className="absolute bg-red-500 mb-4 text-white rounded-full w-6 h-6 flex items-center justify-center">
+                1
+              </div>
+            }
+            <IoNotifications className="ml-[-12px]" size={30} />
           </div>
           <div className="relative cursor-pointer">
-            <img
-              onClick={() => setOpenProfileDestop(prev => !prev)}
-              className='rounded-full hover:brightness-90 w-[2.3rem] h-[2.3rem] object-cover'
-              src={userDecode()?.user?.user_image || "https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png"} alt="" />
-            <div className="bg-white rounded-full left-6 mt-[-16px] border border-primary absolute ">
-              <RiArrowDropDownLine size={15} />
+            <div className="hover:scale-105">
+              <img
+                onClick={() => setOpenProfileDestop(prev => !prev)}
+                className='rounded-full hover:brightness-90 w-[2.8rem] h-[2.8rem] object-cover border-primary border-[2px]'
+                src={userDecode()?.user?.user_image || "https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png"} alt="" />
+              <div className="bg-white rounded-full left-8 mt-[-16px] border border-primary absolute ">
+                <RiArrowDropDownLine size={13} />
+              </div>
             </div>
-
             {isOpenProfileDestop && userDecode() !== null && (
               <div className={`w-[22rem] left-[-20rem] mt-5 z-50 bg-white  rounded-md shadow-xl ${userDecode()?.user?.user_role === "owner" ? "h-[32rem]" : userDecode()?.user?.user_role === "manager" ? "h-[28.5rem]" : "h-[25rem]"} absolute px-2`}>
                 <p className=" text-center text-sm my-2 font-bold text-[#33363F]">โปรไฟล์ของฉัน</p>
