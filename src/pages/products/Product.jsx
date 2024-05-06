@@ -7,6 +7,7 @@ import NewProduct from "./NewProduct";
 import { IoPrint } from "react-icons/io5";
 import { Link } from "react-router-dom";
 import InActiveProduct from "./InActiveProduct";
+import { useSearchParams } from "react-router-dom";
 
 const StyledDiv = styled.div`
   height: calc(100vh - 5rem); /* Default height */
@@ -19,11 +20,14 @@ const StyledDiv = styled.div`
 function Product() {
   document.title = "จัดการสินค้า 💸 POSYAYEE";
 
+  const [searchParams] = useSearchParams({ tab: 'show-all-products' });
+  const initialTab = searchParams.get('tab');
+
   const [pageState, setPageState] = useState({
-    showAllProduct: true,
-    showOutStock: false,
-    showNewProduct: false,
-    showInActiveProduct: false
+    showAllProduct: initialTab === 'show-all-products',
+    showOutStock: initialTab === 'show-out-stock-products',
+    showNewProduct: initialTab === 'show-new-products',
+    showInActiveProduct: initialTab === 'show-in-active-products'
   });
 
   return (
@@ -49,26 +53,26 @@ function Product() {
         </div>
         <div className="mt-2 bg-white rounded-md px-2">
           <div className="flex pt-4">
-            <button
+            <Link to="/product?tab=show-all-products"
               className={` py-2 ${pageState.showAllProduct ? 'border-b-4 border-[#4C49ED] text-primary' : ''}`}
               onClick={() => setPageState(prevState => ({ ...prevState, showAllProduct: true, showOutStock: false, showNewProduct: false, showInActiveProduct: false }))}>
               สินค้าทั้งหมด
-            </button>
-            <button
+            </Link>
+            <Link to="/product?tab=show-out-stock-products"
               className={`mx-2 py-2 px-4  ${pageState.showOutStock ? 'border-b-4 border-[#4C49ED] text-primary' : ''}`}
               onClick={() => setPageState(prevState => ({ ...prevState, showAllProduct: false, showOutStock: true, showNewProduct: false, showInActiveProduct: false }))}>
               สินค้าใกล้หมด
-            </button>
-            <button
+            </Link>
+            <Link to="/product?tab=show-new-products"
               className={`mx-2 py-2 px-4  ${pageState.showNewProduct ? 'border-b-4 border-[#4C49ED] text-primary' : ''}`}
               onClick={() => setPageState(prevState => ({ ...prevState, showAllProduct: false, showOutStock: false, showNewProduct: true, showInActiveProduct: false }))}>
               สินค้าใหม่
-            </button>
-            <button
+            </Link>
+            <Link to="/product?tab=show-in-active-products"
               className={`mx-2 py-2 px-4  ${pageState.showInActiveProduct ? 'border-b-4 border-[#4C49ED] text-primary' : ''}`}
               onClick={() => setPageState(prevState => ({ ...prevState, showAllProduct: false, showOutStock: false, showNewProduct: false, showInActiveProduct: true }))}>
               สินค้าปิดใช้งาน
-            </button>
+            </Link>
           </div>
           <hr />
         </div>
