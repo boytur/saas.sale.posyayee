@@ -14,12 +14,12 @@ function Employee() {
             <div>
               <h1 className="text-black">พนักงานทั้งหมด 1 คน (รวมเจ้าของ)</h1>
             </div>
-            <button className="btn-primary p-2 flex items-center gap-2">
+            <button className="btn-primary p-2 hidden md:flex items-center gap-2">
               <h1 className="text-white">เพิ่มพนักงาน</h1>
               <FaPlusCircle />
             </button>
           </div>
-          <div className="w-full border mt-3 flex gap-3 items-center">
+          <div className="w-full mt-3 flex gap-3 items-center">
             <div>
               <img className="w-[4rem] h-[4rem] rounded-full" src="https://cwdaust.com.au/wpress/wp-content/uploads/2015/04/placeholder-store.png" alt="" />
             </div>
@@ -28,6 +28,10 @@ function Employee() {
               <p className="text-black/70 text-sm">เจ้าของร้าน</p>
             </div>
           </div>
+          <button className="btn-primary flex items-center md:hidden p-2 w-full justify-center mt-6"> 
+            <h1 className="text-white">เพิ่มพนักงาน</h1>
+            <FaPlusCircle />
+          </button>
         </div>
       </div>
     </div>
