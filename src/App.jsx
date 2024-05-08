@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { useEffect, useState } from 'react';
 import Navbar from './components/navbar/Navbar';
 import Sidebar from './components/sidebar/Sidebar';
@@ -16,7 +16,9 @@ import AddProduct from "./pages/products/AddProduct";
 
 const App = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(getSidebarSetting());
+  const [hiddenSidebar, setHiddenSidebar] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(true);
+  const location = useLocation();
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -30,14 +32,28 @@ const App = () => {
     }
   }, []);
 
+  useEffect(() => {
+    const isSettingPath = location.pathname.startsWith("/setting");
+    if (isSettingPath) {
+      setHiddenSidebar(true);
+      setIsSidebarOpen(false);
+      return;
+    }
+    else {
+      setHiddenSidebar(false);
+    }
+  }, [location.pathname]);
+
+
   return (
     <div className="bg-[#F9FAFB]">
       {isAuthenticated && <Navbar
+        hiddenSidebar={hiddenSidebar}
         isSidebarOpen={isSidebarOpen}
         toggleSidebar={toggleSidebar} />}
 
       <div className="flex md:gap-2">
-        {isAuthenticated &&
+        {!hiddenSidebar && isAuthenticated &&
           <div className="">
             <Sidebar isSidebarOpen={isSidebarOpen} />
           </div>}

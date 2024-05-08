@@ -20,7 +20,7 @@ import Axios from "../../libs/Axios";
 
 
 // eslint-disable-next-line react/prop-types
-const Navbar = ({ toggleSidebar }) => {
+const Navbar = ({ toggleSidebar, hiddenSidebar }) => {
 
   const [isOpenProfileDestop, setOpenProfileDestop] = useState(false);
   const [isOpenProfileMobile, setOpenProfileMobile] = useState(false);
@@ -140,10 +140,10 @@ const Navbar = ({ toggleSidebar }) => {
                           </button> : ""
                         }
                         {
-                          (userDecode())?.user?.user_role !== "employee" ? <button className="w-full flex items-center px-3 gap-2 h-12 mt-2 rounded-md text-black/70 hover:text-primary hover:bg-[#aba8ff4c]">
+                          (userDecode())?.user?.user_role !== "employee" ? <Link onClick={()=> setOpenProfileMobile(false)} to="/setting/store#profile" className="w-full flex items-center px-3 gap-2 h-12 mt-2 rounded-md text-black/70 hover:text-primary hover:bg-[#aba8ff4c]">
                             <IoSettingsSharp size={28} />
                             <p className="mt-1 text-md">ตั้งค่าร้านค้า</p>
-                          </button> : ""
+                          </Link> : ""
                         }
                         <button onClick={() => logout()} className="w-full border flex justify-center gap-2 items-center border-primary h-12 mt-5 rounded-md text-black/70 hover:bg-[#4C49ED] hover:text-white">
                           <TbLogout2 size={18} className="mt-[2px]" />
@@ -157,77 +157,79 @@ const Navbar = ({ toggleSidebar }) => {
           </div>
         </div>
 
-        <div className="lg:hidden bg-white  w-full absolute bottom-0 mx-1 flex justify-center">
-          <div className="w-full flex justify-around max-w-screen-sm items-center mb-4">
-            {checkRoutePermission("/") &&
-              <Link
-                onClick={() => setOpenProfileMobile(false)}
-                to="/"
-                className={`h-[3rem] rounded-lg flex items-center gap-2 px-2 ${getActiveButton(
-                  "/"
-                )} transition duration-500 ease-in-out`}
-              >
-                <div>
-                  <MdOutlineStorefront size={35} />
-                </div>
-              </Link>}
+        {!hiddenSidebar &&
+          <div className="lg:hidden bg-white  w-full absolute bottom-0 mx-1 flex justify-center">
+            <div className="w-full flex justify-around max-w-screen-sm items-center mb-4">
+              {checkRoutePermission("/") &&
+                <Link
+                  onClick={() => setOpenProfileMobile(false)}
+                  to="/"
+                  className={`h-[3rem] rounded-lg flex items-center gap-2 px-2 ${getActiveButton(
+                    "/"
+                  )} transition duration-500 ease-in-out`}
+                >
+                  <div>
+                    <MdOutlineStorefront size={35} />
+                  </div>
+                </Link>}
 
-            {checkRoutePermission('/history') &&
-              <Link
-                onClick={() => setOpenProfileMobile(false)}
-                to="/history"
-                className={`h-[3rem] rounded-lg flex items-center gap-2 px-2 ${getActiveButton(
-                  "/history"
-                )} transition duration-500 ease-in-out`}
-              >
-                <div>
-                  <MdHistory size={35} />
-                </div>
-              </Link>}
+              {checkRoutePermission('/history') &&
+                <Link
+                  onClick={() => setOpenProfileMobile(false)}
+                  to="/history"
+                  className={`h-[3rem] rounded-lg flex items-center gap-2 px-2 ${getActiveButton(
+                    "/history"
+                  )} transition duration-500 ease-in-out`}
+                >
+                  <div>
+                    <MdHistory size={35} />
+                  </div>
+                </Link>}
 
-            {checkRoutePermission('/product') &&
-              <Link
-                onClick={() => setOpenProfileMobile(false)}
-                to="/product"
-                className={`h-[3rem] rounded-lg flex items-center gap-2 px-2 ${getActiveButton(
-                  "/product"
-                )} transition duration-500 ease-in-out`}
-              >
-                <div>
-                  <CiBoxes size={35} />
-                </div>
-              </Link>
-            }
+              {checkRoutePermission('/product') &&
+                <Link
+                  onClick={() => setOpenProfileMobile(false)}
+                  to="/product"
+                  className={`h-[3rem] rounded-lg flex items-center gap-2 px-2 ${getActiveButton(
+                    "/product"
+                  )} transition duration-500 ease-in-out`}
+                >
+                  <div>
+                    <CiBoxes size={35} />
+                  </div>
+                </Link>
+              }
 
-            {checkRoutePermission('/finance') &&
-              <Link
-                onClick={() => setOpenProfileMobile(false)}
-                to="/finance"
-                className={`h-[3rem] rounded-lg flex items-center gap-2 px-2 ${getActiveButton(
-                  "/finance"
-                )} transition duration-500 ease-in-out`}
-              >
-                <div>
-                  <MdOutlineSupervisorAccount size={35} />
-                </div>
+              {checkRoutePermission('/finance') &&
+                <Link
+                  onClick={() => setOpenProfileMobile(false)}
+                  to="/finance"
+                  className={`h-[3rem] rounded-lg flex items-center gap-2 px-2 ${getActiveButton(
+                    "/finance"
+                  )} transition duration-500 ease-in-out`}
+                >
+                  <div>
+                    <MdOutlineSupervisorAccount size={35} />
+                  </div>
 
-              </Link>}
+                </Link>}
 
-            {checkRoutePermission('/dashboard') &&
-              <Link
-                onClick={() => setOpenProfileMobile(false)}
-                to="/dashboard"
-                className={`h-[3rem] rounded-lg flex items-center gap-2 px-2 ${getActiveButton(
-                  "/dashboard"
-                )} transition duration-500 ease-in-out`}
-              >
-                <div>
-                  <IoAnalyticsOutline size={35} />
-                </div>
-              </Link>
-            }
+              {checkRoutePermission('/dashboard') &&
+                <Link
+                  onClick={() => setOpenProfileMobile(false)}
+                  to="/dashboard"
+                  className={`h-[3rem] rounded-lg flex items-center gap-2 px-2 ${getActiveButton(
+                    "/dashboard"
+                  )} transition duration-500 ease-in-out`}
+                >
+                  <div>
+                    <IoAnalyticsOutline size={35} />
+                  </div>
+                </Link>
+              }
+            </div>
           </div>
-        </div>
+        }
 
         <div className=" flex justify-center ">
 
@@ -318,10 +320,10 @@ const Navbar = ({ toggleSidebar }) => {
                   </button> : ""
                 }
                 {
-                  (userDecode())?.user?.user_role !== "employee" ? <button className="w-full flex items-center px-3 gap-2 h-12 mt-2 rounded-md text-black/70 hover:text-primary hover:bg-[#aba8ff4c]">
+                  (userDecode())?.user?.user_role !== "employee" ? <Link onClick={() => setOpenProfileDestop(false)} to="/setting/store#profile" className="w-full flex items-center px-3 gap-2 h-12 mt-2 rounded-md text-black/70 hover:text-primary hover:bg-[#aba8ff4c]">
                     <IoSettingsSharp size={28} />
                     <p className="mt-1 text-md">ตั้งค่าร้านค้า</p>
-                  </button> : ""
+                  </Link> : ""
                 }
                 <button onClick={() => logout()} className="w-full border flex justify-center gap-2 items-center border-primary h-12 mt-5 rounded-md text-black/70 hover:bg-[#4C49ED] hover:text-white">
                   <TbLogout2 size={18} className="mt-[2px]" />
