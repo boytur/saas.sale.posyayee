@@ -134,13 +134,13 @@ const Navbar = ({ toggleSidebar, hiddenSidebar }) => {
                           <p className="mt-1 text-md">ตั้งค่าบัญชี</p>
                         </button>
                         {
-                          (userDecode())?.user?.user_role === "owner" ? <button className="w-full flex items-center px-3 gap-2 h-12 mt-2 rounded-md text-black/70 hover:text-primary hover:bg-[#aba8ff4c]">
+                          (userDecode())?.user?.user_role === "owner" ? <Link to="/setting/store#payment" onClick={() => setOpenProfileMobile(false)} className="w-full flex items-center px-3 gap-2 h-12 mt-2 rounded-md text-black/70 hover:text-primary hover:bg-[#aba8ff4c]">
                             <MdPayment size={28} />
                             <p className="text-md">ค่าใช้จ่าย</p>
-                          </button> : ""
+                          </Link> : ""
                         }
                         {
-                          (userDecode())?.user?.user_role !== "employee" ? <Link onClick={()=> setOpenProfileMobile(false)} to="/setting/store#profile" className="w-full flex items-center px-3 gap-2 h-12 mt-2 rounded-md text-black/70 hover:text-primary hover:bg-[#aba8ff4c]">
+                          (userDecode())?.user?.user_role !== "employee" ? <Link onClick={() => setOpenProfileMobile(false)} to="/setting/store#profile" className="w-full flex items-center px-3 gap-2 h-12 mt-2 rounded-md text-black/70 hover:text-primary hover:bg-[#aba8ff4c]">
                             <IoSettingsSharp size={28} />
                             <p className="mt-1 text-md">ตั้งค่าร้านค้า</p>
                           </Link> : ""
@@ -314,10 +314,10 @@ const Navbar = ({ toggleSidebar, hiddenSidebar }) => {
                   <p className="mt-1 text-md">ตั้งค่าบัญชี</p>
                 </button>
                 {
-                  (userDecode())?.user?.user_role === "owner" ? <button className="w-full flex items-center px-3 gap-2 h-12 mt-2 rounded-md text-black/70 hover:text-primary hover:bg-[#aba8ff4c]">
+                  (userDecode())?.user?.user_role === "owner" ? <Link to="/setting/store#payment" onClick={() => setOpenProfileDestop(false)} className="w-full flex items-center px-3 gap-2 h-12 mt-2 rounded-md text-black/70 hover:text-primary hover:bg-[#aba8ff4c]">
                     <MdPayment size={28} />
                     <p className="text-md">ค่าใช้จ่าย</p>
-                  </button> : ""
+                  </Link> : ""
                 }
                 {
                   (userDecode())?.user?.user_role !== "employee" ? <Link onClick={() => setOpenProfileDestop(false)} to="/setting/store#profile" className="w-full flex items-center px-3 gap-2 h-12 mt-2 rounded-md text-black/70 hover:text-primary hover:bg-[#aba8ff4c]">
