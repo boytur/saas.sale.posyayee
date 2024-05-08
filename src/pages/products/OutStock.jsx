@@ -177,7 +177,7 @@ function OutStock() {
                 <div className="w-full overflow-x-scroll">
                     <table className="w-full border-collapse">
                         <thead className="h-[3rem] rounded-t-md">
-                            <tr className="bg-gray-100">
+                            <tr className="bg-gray-100 text-sm md:text-md">
                                 <th className="px-3 rounded-tl-lg">
                                     <input type="checkbox" className="cursor-pointer md:w-4 md:h-4" checked={selectAll} onChange={toggleSelectAll} ref={selectAllRef} />
                                 </th>

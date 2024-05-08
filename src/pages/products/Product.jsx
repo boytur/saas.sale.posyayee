@@ -52,7 +52,7 @@ function Product() {
           </div>
         </div>
         <div className="mt-2 bg-white rounded-md px-2">
-          <div className="flex pt-4">
+          <div className="flex pt-4 text-[0.6rem] md:text-[0.9rem]">
             <Link to="/product?tab=show-all-products"
               className={` py-2 ${pageState.showAllProduct ? 'border-b-4 border-[#4C49ED] text-primary' : ''}`}
               onClick={() => setPageState(prevState => ({ ...prevState, showAllProduct: true, showOutStock: false, showNewProduct: false, showInActiveProduct: false }))}>

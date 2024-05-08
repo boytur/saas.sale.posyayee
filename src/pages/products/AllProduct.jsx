@@ -117,7 +117,7 @@ function AllProduct() {
                         </div>
                         <div className="flex flex-col md:mr-2">
                             <label htmlFor="" className="text-[0.7rem] text-black/80 ml-1 mt-1">ประเภท</label>
-                            <select name="" className="w-[8rem] input-primary cursor-pointer" id="">
+                            <select name="" className="md:w-[8rem] w-full input-primary cursor-pointer" id="">
                                 <option value="">ทั้งหมด</option>
                                 {pageState?.category?.map((category) =>
                                     <option key={category.cat_id} value={category.cat_id}>{category.cat_name}</option>
@@ -178,7 +178,7 @@ function AllProduct() {
                 <div className="w-full overflow-x-scroll">
                     <table className="w-full border-collapse">
                         <thead className="h-[3rem] rounded-t-md">
-                            <tr className="bg-gray-100">
+                            <tr className="bg-gray-100 text-sm md:text-md">
                                 <th className="px-3 rounded-tl-lg">
                                     <input type="checkbox" className="cursor-pointer md:w-4 md:h-4" checked={selectAll} onChange={toggleSelectAll} ref={selectAllRef} />
                                 </th>
