@@ -30,8 +30,8 @@ function Store() {
   return (
     <div>
       <div className="flex justify-center w-full">
-        <div style={{ height: "calc(100vh - 4.9rem)" }} className="md:flex md:flex-row flex flex-col rounded-md max-w-screen-xl w-full ">
-          <div className="bg-white md:w-1/4  px-4 rounded-md">
+        <div style={{ height: "calc(100vh - 4.9rem)" }} className="md:flex md:flex-row flex flex-col rounded-md w-full ">
+          <div className="bg-white md:w-[17rem]  px-4 rounded-md">
             <h1 className="text-primary text-[1.5rem] font-bold text-center my-6">ตั้งค่าร้านค้า</h1>
             <ul className="py-4">
               <li className={`cursor-pointer py-2 px-2 flex items-center gap-2 ${highlightedSection === "profile" || highlightedSection === "" ? "bg-[#E4E3FF] text-primary rounded-md" : ""}`} onClick={() => setHighlightedSection("profile")}>
