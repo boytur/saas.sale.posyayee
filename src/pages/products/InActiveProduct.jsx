@@ -241,6 +241,11 @@ function InActiveProduct() {
                         </tbody>
                     </table>
                 </div>
+                {pageState.loading &&
+                    <div className="flex justify-center w-full mt-12">
+                        <div className="loader"></div>
+                    </div>
+                }
                 <Pagination
                     totalPages={totalPages}
                     pageState={pageState}
