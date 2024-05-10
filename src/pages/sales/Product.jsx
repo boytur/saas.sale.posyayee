@@ -1,6 +1,6 @@
 import { CiSearch } from "react-icons/ci";
 /* eslint-disable react/prop-types */
-function Product({ products, categories }) {
+function Product({ products, categories, onClickAddToCart, isLoading }) {
 
   let productNobarcode = products?.filter((p) => p.prod_barcode === "" || p.prod_barcode === null);
 
@@ -41,19 +41,28 @@ function Product({ products, categories }) {
 
           </div>
         </div>
-        {productNobarcode?.map((product) => (
-          <div key={product.prod_id} className="md:w-[8rem] md:h-[10rem] h-[10rem] w-[7.5rem] mb-2 md:mb-0 items-center md:flex md:flex-col rounded-md p-1 bg-white cursor-pointer shadow-md hover:border-primary border-[2px]">
-            <div className="md:w-full h-[5rem]">
-              <img src={product.prod_image} alt={product.prod_name} className="w-full h-full object-cover" />
-            </div>
-            <div className="w-full mt-2 px-1 truncate ">
-              {product.prod_name}
-            </div>
-            <div className="w-full md:block mt-1 px-1 text-[1.2rem] font-bold text-primary">
-              ฿{product.prod_sale.toFixed(2)}
-            </div>
-          </div>
-        ))}
+
+        {isLoading ?
+          <div>
+            <div className="loader"></div>
+          </div> :
+          <>
+            {productNobarcode?.map((product) => (
+              <div
+                onClick={() => onClickAddToCart(product)}
+                key={product.prod_id} className="md:w-[8rem] md:h-[10rem] h-[10rem] w-[7.5rem] mb-2 md:mb-0 items-center md:flex md:flex-col rounded-md p-1 bg-white cursor-pointer shadow-md hover:border-primary border-[2px]">
+                <div className="md:w-full h-[5rem]">
+                  <img src={product.prod_image} alt={product.prod_name} className="w-full h-full object-cover" />
+                </div>
+                <div className="w-full mt-2 px-1 truncate ">
+                  {product.prod_name}
+                </div>
+                <div className="w-full md:block mt-1 px-1 text-[1.2rem] font-bold text-primary">
+                  ฿{product.prod_sale.toFixed(2)}
+                </div>
+              </div>
+            ))}
+          </>}
       </div>
 
     </div>
