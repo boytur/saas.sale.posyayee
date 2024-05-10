@@ -80,6 +80,10 @@
   .btn-primary {
     @apply bg-[#4C49ED] text-white rounded-md py-1 px-1 hover:bg-[#4c49ede2];
   }
+  .btn-warnning {
+    @apply bg-[#bcbcbc] text-white rounded-md py-1 px-1;
+  }
+
   .text-primary {
     @apply text-[#4C49ED];
   }
