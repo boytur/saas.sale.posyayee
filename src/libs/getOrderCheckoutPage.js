@@ -1,6 +1,6 @@
 import { loadStripe } from '@stripe/stripe-js';
 import Axios from './Axios';
-const stripePromise = loadStripe("pk_test_51P9gsXCPTcd3FEc3kKlUTmAeCY9cir69z0dvIVnSAQntGoSI4YnkcqQlkjBqEwofIhQcut970J0Px8hK4nVbAQLv00hgzZXCLb");
+const stripePromise = loadStripe("pk_live_51P9gsXCPTcd3FEc3Bt3zFfIOT1e1xWzbbU3Es3CTXiKrcVdOGFfm443KE0Xx23LoW97vCCcs7LHZm24UdJICh4r600BlbpeiZw");
 
 const GetOrderCheckoutPage = async (order_id) => {
     try {
