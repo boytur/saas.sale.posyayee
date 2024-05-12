@@ -25,8 +25,8 @@ function AddProduct() {
           'prod_barcode': '',
           'prod_sale': randomNumber2,
           'prod_quantity': randomNumber3,
-          'cat_id': 1,
-          'unit_id': 1
+          'cat_id': 13,
+          'unit_id': 13
         };
 
         const response = await Axios.post('/api/product/add-product', payload);

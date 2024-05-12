@@ -251,7 +251,7 @@ function OutStock() {
                     totalPages={totalPages}
                     pageState={pageState}
                     setPageState={setPageState}
-                    lable={`รายการสินค้าใกล้หมด ${pageState.total} รายการ`}
+                    lable={`รายการสินค้าใกล้หมด ${(pageState.page * pageState.pageSize) - pageState.pageSize + 1} - ${Math.min(pageState.page * pageState.pageSize, pageState.total)} จาก ${pageState.total} รายการ`}
                 />
             </>
         </>

@@ -250,7 +250,7 @@ function InActiveProduct() {
                     totalPages={totalPages}
                     pageState={pageState}
                     setPageState={setPageState}
-                    lable={`รายการสินค้าปิดใช้งาน ${pageState.total} รายการ`}
+                    lable={`รายการสินค้าปิดใช้งาน ${(pageState.page * pageState.pageSize) - pageState.pageSize + 1} - ${Math.min(pageState.page * pageState.pageSize, pageState.total)} จาก ${pageState.total} รายการ`}
                 />
             </div>
         </>

@@ -251,7 +251,7 @@ function AllProduct() {
                     totalPages={totalPages}
                     pageState={pageState}
                     setPageState={setPageState}
-                    lable={`รายการสินค้าทั้งหมด ${pageState.total} รายการ`}
+                    lable={`รายการสินค้า ${(pageState.page * pageState.pageSize) - pageState.pageSize + 1} - ${Math.min(pageState.page * pageState.pageSize, pageState.total)} จาก ${pageState.total} รายการ`}
                 />
             </>
         </>
