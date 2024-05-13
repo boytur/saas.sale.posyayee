@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { useState, useEffect, useRef } from "react";
 import { IoSearch } from "react-icons/io5";
 import Swal from "sweetalert2";
@@ -10,18 +11,9 @@ import Barcode from 'react-barcode';
 import formatUTCtoThai from "../../libs/formatUTCtoThai";
 import Pagination from "../../components/pagination/Pagination";
 
-function NewProduct() {
+function NewProduct({ pageState, setPageState }) {
     const { authenticated } = useAuth();
     const permission = new Permission();
-
-    const [pageState, setPageState] = useState({
-        data: [],
-        category: [],
-        page: 1,
-        pageSize: 10,
-        total: 0,
-        loading: false,
-    });
 
     useEffect(() => {
         fetchProducts();
@@ -205,7 +197,7 @@ function NewProduct() {
                                             <img src={product.prod_image} alt="product" className="w-[50px] h-[50px] rounded-sm object-cover" />
                                         </div>
                                     </td>
-                                    <td className="px-3 py-1 truncate">{product.prod_name}</td>
+                                    <td style={{ maxWidth: '200px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} className="px-3 py-1 truncate">{product.prod_name}</td>
                                     <td className="px-3 py-1 ">
                                         <div className="flex justify-center items-center z-0">
                                             {product.prod_barcode !== "" ?
