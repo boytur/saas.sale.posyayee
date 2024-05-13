@@ -88,7 +88,7 @@ function Scan({ carts, setCarts }) {
                                     <td style={{ width: "40%" }} className="py-1 px-4 text-left border-b-[1px]">
                                         <div className="flex items-center gap-2 w-full">
                                             <img className="w-12 h-12 rounded-sm" src="https://image.posyayee.shop/placeholder.png" alt="" />
-                                            <p className="truncate" >{prod.prod_name}</p>
+                                            <p style={{ maxWidth: '200px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{prod.prod_name}</p>
                                         </div>
                                     </td>
                                     <td style={{ width: "25%" }} className="py-2 px-4 border-b-[1px]">
