@@ -12,7 +12,7 @@ import Store from "./pages/settings/stores/Store";
 import Login from "./pages/auth/Login";
 import { getSidebarSetting, getUuid, setSidebarSetting } from "./libs/localStrage";
 import checkRoutePermission from "./libs/checkRoutePermission";
-import AddProduct from "./pages/products/AddProduct";
+import AddProduct from "./pages/products/addProducts/AddProduct";
 
 const App = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(getSidebarSetting());
