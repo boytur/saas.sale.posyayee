@@ -34,6 +34,31 @@
     background: #000;
   }
 }
+
+.white-loader {
+  width: 15px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  animation: l5 1s infinite linear alternate;
+}
+@keyframes l5 {
+  0% {
+    box-shadow: 20px 0 #f1f1f1, -20px 0 rgba(121, 121, 121, 0.133);
+    background: #c0c0c0;
+  }
+  33% {
+    box-shadow: 20px 0 #797979, -20px 0 #0002;
+    background: rgba(172, 172, 172, 0.133);
+  }
+  66% {
+    box-shadow: 20px 0 rgba(204, 204, 204, 0.133), -20px 0 #b9b9b9;
+    background: rgba(153, 153, 153, 0.133);
+  }
+  100% {
+    box-shadow: 20px 0 rgba(124, 124, 124, 0.133), -20px 0 #979797;
+    background: #dddddd;
+  }
+}
 .toggle-switch {
   position: relative;
   display: inline-block;
