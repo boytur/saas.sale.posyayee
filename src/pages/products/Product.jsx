@@ -50,7 +50,7 @@ function Product () {
   }, [pageState.pageSize, pageState.page, initialTab])
 
   return (
-    <StyledDiv className='w-full rounded-md'>
+    <StyledDiv className='w-full rounded-md overflow-y-scroll'>
       <div className='rounded-md'>
         <div className='bg-white shadow-sm rounded-md p-2 md:flex md:flex-row justify-between'>
           <div className='pb-3 md:mb-0 mt-1'>
