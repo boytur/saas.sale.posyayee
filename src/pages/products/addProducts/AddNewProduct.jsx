@@ -21,7 +21,6 @@ function AddNewProduct ({ categories, units }) {
     unit_id: ''
   })
 
-  console.log(units, categories)
   const handleImageChange = e => {
     const file = e.target.files[0]
     if (file && file.size <= 2 * 1024 * 1024) {

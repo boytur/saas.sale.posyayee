@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import styled from 'styled-components'
 import { AiFillPlusCircle } from 'react-icons/ai'
 import AllProduct from './AllProduct'
 import OutStock from './OutStock'
@@ -8,16 +7,7 @@ import { IoPrint } from 'react-icons/io5'
 import { Link, useNavigate } from 'react-router-dom'
 import InActiveProduct from './InActiveProduct'
 import { useSearchParams } from 'react-router-dom'
-
-const StyledDiv = styled.div`
-  height: calc(100vh - 5rem); /* Default height */
-  @media (max-width: 640px) {
-    height: calc(
-      100vh - 8rem
-    ); /* Height when screen size is less than or equal to 640px */
-  }
-  overflow-y: scroll;
-`
+import StyledDiv from '../../components/styleDiv/StyledDiv'
 
 function Product () {
   document.title = 'จัดการสินค้า 💸 POSYAYEE'

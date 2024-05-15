@@ -1,20 +1,10 @@
-import styled from 'styled-components'
 import Axios from '../../../libs/Axios'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import AddNewProduct from './AddNewProduct'
 import AddExistingProduct from './AddExistingProduct'
 import { useAuth } from '../../../contexts/AuthProvider'
-
-const StyledDiv = styled.div`
-  height: calc(100vh - 5rem); /* Default height */
-  @media (max-width: 640px) {
-    height: calc(
-      100vh - 8rem
-    ); /* Height when screen size is less than or equal to 640px */
-  }
-  overflow-y: scroll;
-`
+import StyledDiv from '../../../components/styleDiv/StyledDiv'
 
 function AddProduct () {
   const navigate = useNavigate()
