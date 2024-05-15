@@ -10,6 +10,21 @@ import { RiDeleteBin5Line } from "react-icons/ri";
 import Barcode from 'react-barcode';
 import formatUTCtoThai from "../../libs/formatUTCtoThai";
 import Pagination from "../../components/pagination/Pagination";
+import { Card } from '@material-tailwind/react'
+
+const TABLE_HEAD = [
+  'ลำดับ',
+  'รูปภาพ',
+  'ชื่อ',
+  'บาร์โค้ด',
+  'ประเภท',
+  'สถานะ',
+  'ต้นทุน',
+  'ราคาขาย',
+  'คงเหลือ',
+  'เพิ่มเมื่อ',
+  'การกระทำ'
+]
 
 function OutStock({ pageState, setPageState }) {
     const { authenticated } = useAuth();
@@ -165,75 +180,144 @@ function OutStock({ pageState, setPageState }) {
                         </div>
                     </div>
                 </div>
-                <div className="w-full overflow-x-scroll">
-                    <table className="w-full border-collapse">
-                        <thead className="h-[3rem] rounded-t-md">
-                            <tr className="bg-gray-100 text-sm md:text-md">
-                                <th className="px-3 rounded-tl-lg">
-                                    <input type="checkbox" className="cursor-pointer md:w-4 md:h-4" checked={selectAll} onChange={toggleSelectAll} ref={selectAllRef} />
-                                </th>
-                                <th className="rounded-tl-lg">ลำดับ</th>
-                                <th className="w-[50px] h-[50px]">รูปภาพ</th>
-                                <th>ชื่อ</th>
-                                <th>บาร์โค้ด</th>
-                                <th>ประเภท</th>
-                                <th>สถานะ</th>
-                                <th>ต้นทุน</th>
-                                <th>ราคาขาย</th>
-                                <th>คงเหลือ</th>
-                                <th>เพิ่มเมื่อ</th>
-                                <th className="rounded-tr-lg">การกระทำ</th>
-                            </tr>
-                        </thead>
-                        <tbody className="bg-white">
-                            {pageState?.data?.map((product, index) => (
-                                <tr key={index} className="hover:bg-[#f5f5ff] border-b-[1px] text-center cursor-pointer">
-                                    <td className="px-3 py-1">
-                                        <input type="checkbox" className="md:w-4 md:h-4 cursor-pointer" checked={selectedItems.includes(index)} onChange={() => toggleItem(index)} />
-                                    </td>
-                                    <td className="px-3 py-1">{index + 1}</td>
-                                    <td className="px-3 py-1">
-                                        <div className="flex justify-center w-[50px] h-[50px] items-center">
-                                            <img src={product.prod_image} alt="product" className="w-[50px] h-[50px] rounded-sm object-cover" />
-                                        </div>
-                                    </td>
-                                    <td style={{ maxWidth: '200px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} className="px-3 py-1 truncate">{product.prod_name}</td>
-                                    <td className="px-3 py-1 ">
-                                        <div className="flex justify-center items-center z-0">
-                                            {product.prod_barcode !== "" ?
-                                                <Barcode className="w-[90px] h-[50px]" value={product.prod_barcode.toString()} />
-                                                : <div className="text-black/70 text-sm">ไม่มี</div>
-                                            }
-                                        </div>
-                                    </td>
-                                    <td className="px-3 py-1">{product?.category?.cat_name}</td>
-                                    <td className="px-3 py-1">
-                                        <div className="toggle-switch">
-                                            <input type="checkbox" id="statusToggle" className="toggle-input" checked={product?.prod_status === 'active'} />
-                                            <label htmlFor="statusToggle" className="toggle-label"></label>
-                                        </div>
-                                    </td>
+                <Card className='w-full overflow-x-scroll'>
+          <table className='w-full border-collapse'>
+            <thead className='h-[3rem] rounded-t-md'>
+              <tr className='text-sm md:text-md'>
+                <th className='px-3 rounded-tl-lg bg-[#ECEFF1]'>
+                  <input
+                    type='checkbox'
+                    className='cursor-pointer md:w-4 md:h-4'
+                    checked={selectAll}
+                    onChange={toggleSelectAll}
+                    ref={selectAllRef}
+                  />
+                </th>
+                {TABLE_HEAD.map(head => (
+                  <th
+                    key={head}
+                    className='border-b border-blue-gray-100 bg-blue-gray-50 p-4'
+                  >
+                    <p className='font-normal leading-none'>{head}</p>
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody className='bg-white'>
+              {pageState?.data?.map(
+                (
+                  {
+                    prod_image,
+                    prod_name,
+                    prod_barcode,
+                    category,
+                    prod_status,
+                    prod_cost,
+                    prod_sale,
+                    prod_quantity,
+                    product_unit,
+                    createdAt
+                  },
+                  index
+                ) => {
+                  return (
+                    <tr
+                      key={index}
+                      className='hover:bg-[#f5f5ff] border-b-[1px] text-center cursor-pointer text-black'
+                    >
+                      <td className='px-3 py-1 bg-[#ECEFF1]'>
+                        <input
+                          type='checkbox'
+                          className='md:w-4 md:h-4 cursor-pointer'
+                          checked={selectedItems.includes(index)}
+                          onChange={() => toggleItem(index)}
+                        />
+                      </td>
+                      <td className='px-3 py-1'>{index + 1}</td>
+                      <td className='px-3 py-1'>
+                        <div className='flex justify-center w-[50px] h-[50px] items-center'>
+                          <img
+                            src={prod_image}
+                            alt='product'
+                            className='w-[50px] h-[50px] rounded-sm object-cover'
+                          />
+                        </div>
+                      </td>
+                      <td
+                        style={{
+                          maxWidth: '200px',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                          whiteSpace: 'nowrap'
+                        }}
+                        className='px-3 py-1 truncate'
+                      >
+                        {prod_name}
+                      </td>
+                      <td className='px-3 py-1 '>
+                        <div className='flex justify-center items-center z-0'>
+                          {prod_barcode !== '' ? (
+                            <Barcode
+                              className='w-[90px] h-[50px]'
+                              value={prod_barcode.toString()}
+                            />
+                          ) : (
+                            <div className='text-black/70 text-sm'>ไม่มี</div>
+                          )}
+                        </div>
+                      </td>
+                      <td className='px-3 py-1'>{category?.cat_name}</td>
+                      <td className='px-3 py-1'>
+                        <div className='toggle-switch'>
+                          <input
+                            type='checkbox'
+                            id='statusToggle'
+                            className='toggle-input'
+                            checked={prod_status === 'active'}
+                          />
+                          <label
+                            htmlFor='statusToggle'
+                            className='toggle-label'
+                          ></label>
+                        </div>
+                      </td>
 
-                                    <td className="px-3 text-lg py-1 font-bold text-[#4C49ED]">฿{product.prod_cost}</td>
-                                    <td className="px-3 text-lg py-1 font-bold text-green-600">฿{product.prod_sale}</td>
-                                    <td className="px-3 text-lg py-1">{product.prod_quantity} ({product?.product_unit?.unit_name})</td>
-                                    <td className="px-3 text-sm py-1">{formatUTCtoThai(product?.createdAt)}</td>
-                                    <td className="px-3 py-1 ">
-                                        <div className="flex justify-center gap-2 items-center rounded-md">
-                                            <div className="border p-1 rounded-md flex items-center justify-center">
-                                                <LuPencilLine className="hover:scale-110 pb-1 text-black/70 hover:text-[#4C49ED]" size={25} />
-                                            </div>
-                                            |
-                                            <div className="border p-1 rounded-md flex items-center justify-center">
-                                                <RiDeleteBin5Line className="hover:scale-110 pb-1 text-black/70 hover:text-red-500" size={25} />
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
+                      <td className='px-3 text-lg py-1 font-bold text-[#4C49ED]'>
+                        ฿{prod_cost}
+                      </td>
+                      <td className='px-3 text-lg py-1 font-bold text-green-600'>
+                        ฿{prod_sale}
+                      </td>
+                      <td className='px-3 text-lg py-1'>
+                        {prod_quantity} ({product_unit?.unit_name})
+                      </td>
+                      <td className='px-3 text-sm py-1'>
+                        {formatUTCtoThai(createdAt)}
+                      </td>
+                      <td className='px-3 py-1 '>
+                        <div className='flex justify-center gap-2 items-center rounded-md'>
+                          <div className='border p-1 rounded-md flex items-center justify-center'>
+                            <LuPencilLine
+                              className='hover:scale-110 pb-1 text-black/70 hover:text-[#4C49ED]'
+                              size={25}
+                            />
+                          </div>
+                          |
+                          <div className='border p-1 rounded-md flex items-center justify-center'>
+                            <RiDeleteBin5Line
+                              className='hover:scale-110 pb-1 text-black/70 hover:text-red-500'
+                              size={25}
+                            />
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  )
+                }
+              )}
+            </tbody>
+          </table>
+        </Card>
                 {pageState.loading &&
                     <div className="flex justify-center w-full mt-12">
                         <div className="loader"></div>
