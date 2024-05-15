@@ -6,7 +6,7 @@ function Pagination({ pageState, totalPages, setPageState, lable }) {
         <>
             {
                 pageState.total > 0 &&
-                <div className="mt-4 flex flex-col gap-2 justify-center items-center mb-12">
+                <div className="mt-4 flex flex-col gap-2 justify-center items-center pb-[6rem] lg:pb-0">
                     <div className="mt-2">
                         {lable}
                     </div>
