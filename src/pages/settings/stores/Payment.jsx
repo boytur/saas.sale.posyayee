@@ -1,174 +1,270 @@
-import Swal from "sweetalert2";
-import Axios from "../../../libs/Axios";
-import Permission from "../../../libs/Permission";
-import { useEffect, useState } from "react";
-import Pagination from "../../../components/pagination/Pagination";
-import GetOrderCheckoutPage from "../../../libs/getOrderCheckoutPage";
+import Swal from 'sweetalert2'
+import Axios from '../../../libs/Axios'
+import Permission from '../../../libs/Permission'
+import { useEffect, useState } from 'react'
+import Pagination from '../../../components/pagination/Pagination'
+import GetOrderCheckoutPage from '../../../libs/getOrderCheckoutPage'
+import { Card } from '@material-tailwind/react'
 
+const TABLE_HEAD_OPEN_ORDER = [
+  'หมายเลขออเดอร์	',
+  'ชื่อออเดอร์	',
+  'โน้ต',
+  'ราคา',
+  'สถานะ',
+  'การกระทำ'
+]
 
-function Payment() {
+const TABLE_HEAD_HISTORY = [
+  'หมายเลขออเดอร์	',
+  'ชื่อออเดอร์	',
+  'โน้ต',
+  'ราคา',
+  'สถานะ'
+]
 
-  document.title = "ค่าใช้จ่าย 💸 การตั้งค่า";
+function Payment () {
+  document.title = 'ค่าใช้จ่าย 💸 การตั้งค่า'
 
   const [pageState, setPageState] = useState({
-    'isLoading': false,
-    'data': [],
-    'total': 0,
-    'page': 1,
-    'pageSize': 10
-  });
+    isLoading: false,
+    data: [],
+    total: 0,
+    page: 1,
+    pageSize: 10
+  })
 
-  const totalPages = Math.ceil(pageState.total / pageState.pageSize);
+  const totalPages = Math.ceil(pageState.total / pageState.pageSize)
 
-  const [openOrder, setOpenOrder] = useState(null);
+  const [openOrder, setOpenOrder] = useState(null)
 
   const fetchPayments = async () => {
     try {
-      const permission = new Permission();
+      const permission = new Permission()
       if (permission.canGetOrderOpenOrder()) {
-
-        setPageState((prev) => ({
+        setPageState(prev => ({
           ...prev,
-          isLoading: true,
-        }));
+          isLoading: true
+        }))
 
         const response = await Axios.get('/api/payment/get-order', {
           params: {
             page: pageState.page,
             perPage: pageState.pageSize,
-          },
-        });
+            sort: 'DESC',
+            sortBy: 'createdAt'
+          }
+        })
 
         if (response.status === 200) {
-          setPageState((prev) => ({
+          setPageState(prev => ({
             ...prev,
             isLoading: false,
             data: response.data.order,
             total: response.data.total
-          }));
-          setOpenOrder(response.data.order.filter(order => order.order_status === "open"));
+          }))
+          setOpenOrder(
+            response.data.order.filter(order => order.order_status === 'open')
+          )
         }
       }
-    }
-    catch (err) {
-      console.log(err);
+    } catch (err) {
+      console.log(err)
       Swal.fire({
-        'title': 'เกิดข้อผิดพลาด',
-        'icon': "error",
-        'text': err?.response?.data?.message
-      });
+        title: 'เกิดข้อผิดพลาด',
+        icon: 'error',
+        text: err?.response?.data?.message
+      })
     }
   }
 
   useEffect(() => {
-    fetchPayments();
-  }, []);
-
+    fetchPayments()
+  }, [])
 
   return (
-    <div className="w-full h-full px-4 bg-white rounded-md mb-32">
-      <div className="w-full">
-        <h1 className="text-[2rem] font-bold text-gray-700 mb-2">ค่าใช้จ่าย</h1>
-        <hr />
-      </div>
-      {pageState.isLoading &&
-        <div className="w-full flex justify-center mt-12">
-          <div className="loader"></div>
+    <>
+      <div className='w-full px-4 bg-white rounded-md mb-32'>
+        <div className='w-full'>
+          <h1 className='text-[2rem] font-bold mb-2'>ค่าใช้จ่าย</h1>
+          <hr />
         </div>
-      }
-      <div className="w-full mt-6">
-        <div>
-          <p className="mb-2">ค่าใช้จ่ายรอชำระ</p>
-          {openOrder?.length > 0 && !pageState.isLoading ? (
-            <div className="w-full rounded-md overflow-x-scroll">
-              <table className="w-full border">
-                <tr className="bg-gray-200 text-[0.7rem]">
-                  <th className="py-2 px-4">หมายเลขออเดอร์</th>
-                  <th className="py-2 px-4">ชื่อออเดอร์</th>
-                  <th className="py-2 px-4">โน็ต</th>
-                  <th className="py-2 px-4">ราคา</th>
-                  <th className="py-2 px-4">สถานะ</th>
-                  <th className="py-2 px-4">การกระทำ</th>
-                </tr>
-                {openOrder?.map((order) => (
-                  <tr className="border-t text-sm md:text-lg hover:bg-[#f5f5ff] text-center cursor-pointer" key={order.order_id}>
-                    <td className="py-2 px-4">{order.order_no}</td>
-                    <td className="py-2 px-4">{order.order_title}</td>
-                    <td className="py-2 px-4">{order.order_note}</td>
-                    <td className="py-2 px-4">฿{(order.order_price).toFixed(2)}</td>
-                    <td className="py-2 px-4">
-                      {order.order_status === "open" ? (
-                        <div className="bg-yellow-800/20 rounded-full text-black text-sm p-1 px-4">
-                          <p>ค้างชำระ</p>
-                        </div>
-                      ) : (
-                        ""
+        {pageState.isLoading && (
+          <div className='w-full flex justify-center mt-12'>
+            <div className='loader'></div>
+          </div>
+        )}
+
+        {/* Open order */}
+        <div className='w-full mt-6'>
+          <div>
+            <p className='mb-2'>ค่าใช้จ่ายรอชำระ</p>
+            {openOrder?.length > 0 && !pageState.isLoading ? (
+              <div className='w-full rounded-md'>
+                <Card className='h-full w-full overflow-scroll'>
+                  <table className='w-full min-w-max table-auto text-left'>
+                    <thead>
+                      <tr>
+                        {TABLE_HEAD_OPEN_ORDER.map(head => (
+                          <th
+                            key={head}
+                            className='border-b border-blue-gray-100 bg-blue-gray-50 p-4'
+                          >
+                            <p className='font-normal leading-none'>{head}</p>
+                          </th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {openOrder?.map(
+                        (
+                          {
+                            order_id,
+                            order_no,
+                            order_title,
+                            order_price,
+                            order_note
+                          },
+                        ) => {
+
+                          return (
+                            <tr key={order_id} className='text-black'>
+                              <td >
+                                <p className='font-normal'>{order_no}</p>
+                              </td>
+                              <td >
+                                <p className='font-normal'>{order_title}</p>
+                              </td>
+                              <td >
+                                <p className='font-normal'>{order_note}</p>
+                              </td>
+                              <td >
+                                <p className='font-normal'>
+                                  ฿{order_price?.toFixed(2)}
+                                </p>
+                              </td>
+                              <td >
+                                <div>
+                                  <p className='font-normal bg-yellow-800/20 w-fit px-3 p-1 text-[0.8rem] rounded-full text-black'>
+                                    ค้างชำระ
+                                  </p>
+                                </div>
+                              </td>
+                              <td >
+                                <p className='font-medium'>
+                                  <button
+                                    onClick={() => {
+                                      GetOrderCheckoutPage(order_id)
+                                    }}
+                                    className='btn-primary text-white  py-2 px-4 rounded-md text-sm'
+                                  >
+                                    ชำระเงิน
+                                  </button>
+                                </p>
+                              </td>
+                            </tr>
+                          )
+                        }
                       )}
-                    </td>
-                    <td className="py-2 px-4">
-                      <button onClick={() => GetOrderCheckoutPage(order.order_id)} className="btn-primary text-sm p-2">ชำระเงิน</button>
-                    </td>
-                  </tr>
-                ))}
-              </table>
-            </div>
-          ) : (
-            <p className="text-center text-gray-500">ไม่มีรายการค้างชำระ</p>
+                    </tbody>
+                  </table>
+                </Card>
+              </div>
+            ) : (
+              <p className='text-center text-gray-500'>ไม่มีรายการค้างชำระ</p>
+            )}
+          </div>
+
+          {/* History */}
+          <div className='mt-8'>
+            <p className='mb-2'>ประวัติการชำระเงิน</p>
+            {!pageState.isLoading &&
+            pageState.data.filter(order => order.order_status === 'complete')
+              .length > 0 ? (
+              <Card className='h-full w-full overflow-scroll'>
+                <table className='w-full min-w-max table-auto text-left'>
+                  <thead>
+                    <tr>
+                      {TABLE_HEAD_HISTORY.map(head => (
+                        <th
+                          key={head}
+                          className='border-b border-blue-gray-100 bg-blue-gray-50 p-4'
+                        >
+                          <p className='font-normal leading-none'>{head}</p>
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {pageState.data
+                      .filter(order => order.order_status === 'complete')
+                      ?.map(
+                        (
+                          {
+                            order_id,
+                            order_no,
+                            order_title,
+                            order_price,
+                            order_status,
+                            order_note
+                          },
+
+                        ) => {
+                          return (
+                            <tr key={order_id} className='text-black'>
+                              <td >
+                                <p className='font-normal'>{order_no}</p>
+                              </td>
+                              <td >
+                                <p className='font-normal'>{order_title}</p>
+                              </td>
+                              <td >
+                                <p className='font-normal'>{order_note}</p>
+                              </td>
+                              <td >
+                                <p className='font-normal'>
+                                  ฿{order_price?.toFixed(2)}
+                                </p>
+                              </td>
+                              <td >
+                                <div>
+                                  <p className='font-normal bg-green-500/30   text-sm  w-fit px-3 p-1 text-[0.8rem] rounded-full text-black'>
+                                    {order_status === 'complete'
+                                      ? 'ชำระเงินแล้ว'
+                                      : 'ค้างชำระ'}
+                                  </p>
+                                </div>
+                              </td>
+                            </tr>
+                          )
+                        }
+                      )}
+                  </tbody>
+                </table>
+              </Card>
+            ) : (
+              <p className='text-center text-gray-500'>
+                ไม่มีประวัติการชำระเงิน
+              </p>
+            )}
+          </div>
+
+          {pageState.data.filter(order => order.order_status === 'complete')
+            .length > 0 && (
+            <Pagination
+              totalPages={totalPages}
+              pageState={pageState}
+              setPageState={setPageState}
+              lable={`ประวัติการชำระเงินทั้งหมด ${
+                pageState.data.filter(
+                  order => order.order_status === 'complete'
+                )?.length
+              } รายการ`}
+            />
           )}
         </div>
-
-        <div className="mt-8">
-          <p className="mb-2">ประวัติการชำระเงิน</p>
-          {!pageState.isLoading && ((pageState.data).filter(order => order.order_status === "complete").length > 0) ?
-
-            <div className="w-full rounded-md overflow-x-scroll">
-              <table className="w-full border">
-                <tr className="bg-gray-200 text-[0.7rem]">
-                  <th className="py-2 px-4">หมายเลขออเดอร์</th>
-                  <th className="py-2 px-4">ชื่อออเดอร์</th>
-                  <th className="py-2 px-4">โน็ต</th>
-                  <th className="py-2 px-4">ราคา</th>
-                  <th className="py-2 px-4">สถานะ</th>
-                </tr>
-                {pageState?.data
-                  ?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-                  .filter(order => order.order_status !== "open")
-                  .map(order => (
-                    <tr className="border-t text-sm md:text-lg text-center hover:bg-[#f5f5ff]" key={order.order_id}>
-                      <td className="py-2 px-4">{order.order_no}</td>
-                      <td className="py-2 px-4">{order.order_title}</td>
-                      <td className="py-2 px-4">{order.order_note}</td>
-                      <td className="py-2 px-4">฿{(order.order_price).toFixed(2)}</td>
-                      <td className="py-2 px-4">
-                        {order.order_status === "open" ? (
-                          <div className="bg-yellow-800 rounded-md text-white  p-1">
-                            <p>ค้างชำระ</p>
-                          </div>
-                        ) : (
-                          <div className="bg-green-500/30 rounded-full text-black text-sm p-1">
-                            <p>ชำระแล้ว</p>
-                          </div>
-                        )}
-                      </td>
-                    </tr>
-                  ))}
-              </table>
-            </div>
-            : <p className="text-center text-gray-500">ไม่มีประวัติการชำระเงิน</p>}
-        </div>
-
-        {((pageState.data).filter(order => order.order_status === "complete").length > 0) &&
-          <Pagination
-            totalPages={totalPages}
-            pageState={pageState}
-            setPageState={setPageState}
-            lable={`ประวัติการชำระเงินทั้งหมด ${(pageState.data).filter(order => order.order_status === "complete")?.length} รายการ`}
-          />
-        }
-
       </div>
-    </div>
+    </>
   )
 }
-
-export default Payment;
+export default Payment
