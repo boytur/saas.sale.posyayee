@@ -130,7 +130,7 @@ function Payment () {
                           return (
                             <tr key={order_id} className='text-black'>
                               <td >
-                                <p className='font-normal'>{order_no}</p>
+                                <p className='font-normal p-4'>{order_no}</p>
                               </td>
                               <td >
                                 <p className='font-normal'>{order_title}</p>
@@ -211,9 +211,9 @@ function Payment () {
 
                         ) => {
                           return (
-                            <tr key={order_id} className='text-black'>
+                            <tr key={order_id} className='text-black border-b'>
                               <td >
-                                <p className='font-normal'>{order_no}</p>
+                                <p className='font-normal p-4'>{order_no}</p>
                               </td>
                               <td >
                                 <p className='font-normal'>{order_title}</p>
