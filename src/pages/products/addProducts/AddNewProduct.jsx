@@ -130,8 +130,11 @@ function AddNewProduct ({ categories, units }) {
   }
 
   return (
-    <div style={{height: "calc(100vh - 14rem)"}} className='w-full bg-white h-full md:flex md:flex-row flex flex-col md:mb-0 mb-6 rounded-md'>
-      <div className='pt-2 p-2 w-full order-2 md:order-1'>
+    <div
+      style={{ height: 'calc(100vh - 14rem)' }}
+      className='w-full bg-white h-full lg:flex lg:flex-row flex flex-col lg:mb-0 mb-6 rounded-md'
+    >
+      <div className='pt-2 p-2 w-full order-2 lg:order-1'>
         {/* barcode */}
         <div>
           <label htmlFor='' className='text-sm text-gray-700'>
@@ -168,8 +171,8 @@ function AddNewProduct ({ categories, units }) {
         </div>
 
         {/* name */}
-        <div className='mt-2 md:flex md:flex-row flex-col gap-2'>
-          <div className='md:w-3/4 w-full'>
+        <div className='mt-2 lg:flex lg:flex-row flex-col gap-2'>
+          <div className='lg:w-3/4 w-full'>
             <label htmlFor='' className='text-sm text-gray-700 '>
               ชื่อสินค้า <span className=' text-red-500'>*</span>
             </label>
@@ -292,16 +295,16 @@ function AddNewProduct ({ categories, units }) {
 
       {/* image */}
       <div
-        className='w-full order-1 p-3 justify-center flex'
+        className='w-full order-1 p-3 justify-center flex items-center'
         onDrop={e => handleImageDrop(e)}
         onDragOver={e => handleDragOver(e)}
       >
-        <div className='flex items-center justify-center w-full max-w-[30rem]'>
+        <div className='flex items-center justify-center border w-full max-w-[30rem]'>
           {product.prod_image ? (
             <div className='flex flex-col'>
               <img
                 src={product.prod_image}
-                className=' rounded-md border object-cover w-[30rem] h-[20rem]  md:w-[30rem] md:h-[20rem]'
+                className=' rounded-md border object-cover w-[30rem] h-[20rem]  lg:w-[30rem] lg:h-[20rem]'
                 alt=''
               />
               <button
@@ -336,11 +339,11 @@ function AddNewProduct ({ categories, units }) {
                   <span className='font-semibold'>คลิ๊กหรือลากวางรูปภาพ</span>
                 </p>
                 <p className='text-xs text-gray-500 '>
-                  รองรับไฟล์ภาพ SVG, PNG, JPG และ GIF ขนาดไม่เกิน 2MB
+                  รองรับไฟล์ภาพ PNG, JPG, JPEG และ GIF ขนาดไม่เกิน 2MB
                 </p>
               </div>
               <input
-                accept='image/*'
+                accept='.jpg,.jpeg,.png,.gif'
                 id='dropzone-file'
                 onChange={handleImageChange}
                 type='file'
