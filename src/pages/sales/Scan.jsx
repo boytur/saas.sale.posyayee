@@ -4,7 +4,7 @@ import { CiCircleMinus, CiCirclePlus } from 'react-icons/ci'
 import { MdShoppingCart } from 'react-icons/md'
 import { useEffect } from 'react'
 // eslint-disable-next-line react/prop-types
-function Scan ({ carts, setCarts }) {
+function Scan ({ carts, setCarts, discount, setDiscount }) {
   const incrementQuantity = prod_id => {
     const existingProductIndex = carts.findIndex(
       product => product.prod_id === prod_id
@@ -12,6 +12,30 @@ function Scan ({ carts, setCarts }) {
     const updatedCarts = [...carts]
     updatedCarts[existingProductIndex].quantity += 1
     setCarts(updatedCarts)
+
+    const product = carts.find(product => product.prod_id === prod_id)
+
+    if (
+      product.promotion &&
+      product.quantity % product.promotion.promo_prod_amount === 0
+    ) {
+      if (discount.length === 0) {
+        const base_price =
+          product.promotion.promo_prod_amount * product.prod_sale
+        const promotion = product.promotion
+
+        const newDiscount = [
+          { base_price, prod_id: product.prod_id, promotion }
+        ]
+
+        setDiscount(newDiscount)
+      } else {
+        const base_price =
+          product.promotion.promo_prod_amount * product.prod_sale
+        const promotion = product.promotion
+        discount.push({ base_price, prod_id: product.prod_id, promotion })
+      }
+    }
   }
 
   const decrementQuantity = prod_id => {
@@ -23,6 +47,24 @@ function Scan ({ carts, setCarts }) {
       updatedCarts[existingProductIndex].quantity -= 1
     }
     setCarts(updatedCarts)
+
+    const product = updatedCarts[existingProductIndex]
+    if (product.promotion) {
+      const promoIndex = discount.findIndex(
+        item =>
+          item.prod_id === prod_id &&
+          item.promotion.promo_id === product.promotion.promo_id
+      )
+
+      if (
+        promoIndex !== -1 &&
+        product.quantity % product.promotion.promo_prod_amount !== 0
+      ) {
+        const updatedDiscount = [...discount]
+        updatedDiscount.splice(promoIndex, 1)
+        setDiscount(updatedDiscount)
+      }
+    }
   }
 
   const deleteProductFromCart = prod_id => {
@@ -33,12 +75,25 @@ function Scan ({ carts, setCarts }) {
       const updatedItems = [...carts]
       updatedItems.splice(indexToDelete, 1)
       setCarts(updatedItems)
+
+      // Remove any discounts related to the deleted product
+      const updatedDiscount = discount.filter(item => item.prod_id !== prod_id)
+      setDiscount(updatedDiscount)
     }
   }
+
   let totalPrice = carts.reduce(
     (total, item) => total + item.prod_sale * item.quantity,
     0
   )
+
+  let totalDiscount = discount?.reduce((total, item) => {
+    if (item.promotion) {
+      return total + (item.base_price - item.promotion.promo_prod_price)
+    } else {
+      return total
+    }
+  }, 0)
 
   useEffect(() => {
     function handleKeyDown (event) {
@@ -56,6 +111,7 @@ function Scan ({ carts, setCarts }) {
       window.removeEventListener('keydown', handleKeyDown)
     }
   }, [])
+
 
   return (
     <>
@@ -178,12 +234,12 @@ function Scan ({ carts, setCarts }) {
             </div>
             <div className='flex justify-between mx-6 items-center'>
               <h1>ส่วนลด</h1>
-              <h1 className=''>00.00</h1>
+              <h1 className=''>{totalDiscount}</h1>
             </div>
             <div className='flex justify-between mx-6 items-center'>
               <h1>ราคารวม</h1>
               <h1 className='text-[2.5rem] font-bold text-primary'>
-                {totalPrice.toLocaleString('en-US')}
+                {((totalPrice - totalDiscount).toLocaleString('en-US'))}
               </h1>
             </div>
           </div>
