@@ -302,7 +302,7 @@ function AllProduct ({ pageState, setPageState }) {
                           {prod_barcode !== '' ? (
                             <Barcode
                               className='w-[90px] h-[50px]'
-                              value={prod_barcode.toString()}
+                              value={prod_barcode?.toString()}
                             />
                           ) : (
                             <div className='text-black/70 text-sm'>ไม่มี</div>
