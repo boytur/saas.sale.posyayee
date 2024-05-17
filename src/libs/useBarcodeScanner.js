@@ -37,7 +37,7 @@ const useBarcodeScanner = (onBarcodeScanned) => {
           barcode += key;
         }
       }
-      interval = setInterval(() => (barcode = ""), 200);
+      interval = setInterval(() => (barcode = ""), 100);
     };
 
     document.addEventListener("keydown", handleKeyDown);
