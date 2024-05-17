@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import Swal from 'sweetalert2'
 import Axios from '../../../libs/Axios'
+import useBarcodeScanner from '../../../libs/useBarcodeScanner'
 
 /* eslint-disable react/prop-types */
 function AddNewProduct ({ categories, units }) {
@@ -128,6 +129,11 @@ function AddNewProduct ({ categories, units }) {
       })
     }
   }
+  const handleBarcodeScan = barcode => {
+    console.log(`Barcode : ${barcode}`)
+    setProduct({ ...product, prod_barcode: barcode })
+  }
+  useBarcodeScanner(handleBarcodeScan)
 
   return (
     <div
@@ -141,6 +147,7 @@ function AddNewProduct ({ categories, units }) {
             บาร์โค้ด
           </label>
           <input
+            value={product.prod_barcode}
             onChange={e =>
               setProduct({ ...product, prod_barcode: e.target.value })
             }
@@ -299,7 +306,7 @@ function AddNewProduct ({ categories, units }) {
         onDrop={e => handleImageDrop(e)}
         onDragOver={e => handleDragOver(e)}
       >
-        <div className='flex items-center justify-center border w-full max-w-[30rem]'>
+        <div className='flex flex-col items-center justify-center w-full max-w-[30rem]'>
           {product.prod_image ? (
             <div className='flex flex-col'>
               <img
@@ -336,7 +343,7 @@ function AddNewProduct ({ categories, units }) {
                   />
                 </svg>
                 <p className='mb-2 text-sm text-gray-500 '>
-                  <span className='font-semibold'>คลิ๊กหรือลากวางรูปภาพ</span>
+                  <span className='font-semibold'>คลิ๊กหรือลากวางรูปภาพสินค้า</span>
                 </p>
                 <p className='text-xs text-gray-500 '>
                   รองรับไฟล์ภาพ PNG, JPG, JPEG และ GIF ขนาดไม่เกิน 2MB
