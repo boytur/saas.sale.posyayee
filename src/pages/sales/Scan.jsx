@@ -2,7 +2,10 @@
 import { RiDeleteBin5Line } from 'react-icons/ri'
 import { CiCircleMinus, CiCirclePlus } from 'react-icons/ci'
 import { MdShoppingCart } from 'react-icons/md'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
+import PaymentDialog from '../../components/sales/PaymentDialog'
+import Swal from 'sweetalert2'
+
 // eslint-disable-next-line react/prop-types
 function Scan ({ carts, setCarts, discount, setDiscount }) {
   const incrementQuantity = prod_id => {
@@ -29,11 +32,13 @@ function Scan ({ carts, setCarts, discount, setDiscount }) {
         ]
 
         setDiscount(newDiscount)
+        console.log(discount)
       } else {
         const base_price =
           product.promotion.promo_prod_amount * product.prod_sale
         const promotion = product.promotion
         discount.push({ base_price, prod_id: product.prod_id, promotion })
+        console.log(discount)
       }
     }
   }
@@ -46,6 +51,7 @@ function Scan ({ carts, setCarts, discount, setDiscount }) {
     if (updatedCarts[existingProductIndex].quantity > 1) {
       updatedCarts[existingProductIndex].quantity -= 1
     }
+
     setCarts(updatedCarts)
 
     const product = updatedCarts[existingProductIndex]
@@ -55,11 +61,19 @@ function Scan ({ carts, setCarts, discount, setDiscount }) {
           item.prod_id === prod_id &&
           item.promotion.promo_id === product.promotion.promo_id
       )
+   
+      let cycle  = 0;
+      for(let i = 1 ; i <= product.quantity; i++){
+        if(i % product.promotion.promo_prod_amount === 0) {
+          cycle++;
+        }
+      }
 
-      if (
-        promoIndex !== -1 &&
-        product.quantity % product.promotion.promo_prod_amount !== 0
-      ) {
+      console.log(discount)
+      console.log("dis2",discount.filter((p)=> p.prod_id === product.prod_id ))
+      console.log('=========')
+
+      if((discount.filter((p)=> p.prod_id === product.prod_id )).length - cycle === 1){
         const updatedDiscount = [...discount]
         updatedDiscount.splice(promoIndex, 1)
         setDiscount(updatedDiscount)
@@ -95,14 +109,49 @@ function Scan ({ carts, setCarts, discount, setDiscount }) {
     }
   }, 0)
 
+  const [open, setOpen] = useState(false)
+  const handleOpen = () => setOpen(!open)
+
+  const handleCancel = () => {
+    if (totalPrice <= 0) {
+      return
+    }
+    Swal.fire({
+      title: 'ยกเลิกการขาย',
+      text: 'คุณต้องการยกเลิกการขายใช่หรือไม่',
+      icon: 'warning',
+      showCancelButton: true,
+      cancelButtonText: 'ไม่ต้องการ',
+      confirmButtonText: 'ใช่ ฉันต้องการ',
+      reverseButtons: true
+    }).then(result => {
+      if (result.isConfirmed) {
+        setCarts([])
+        setDiscount([])
+      }
+    })
+  }
   useEffect(() => {
+    let totalPrice = carts.reduce(
+      (total, item) => total + item.prod_sale * item.quantity,
+      0
+    )
+
     function handleKeyDown (event) {
-      // เช็คว่าถ้ากดปุ่ม F12
+      // เช็คว่าถ้ากดปุ่ม =,ช, +
       if (event.keyCode === 107 || event.key === '=' || event.key === 'ช') {
-        // เรียกฟังก์ชันที่เปิด Popup หรือทำสิ่งที่คุณต้องการทำ
-        console.log('F12')
+        console.log(totalPrice)
+        if (totalPrice !== 0) {
+          handleOpen()
+        }
+      }
+      if (event.keyCode === 109 || event.key === '-' || event.key === 'ข') {
+        if (totalPrice !== 0) {
+          handleCancel()
+        }
       }
     }
+
     // เพิ่ม event listener เมื่อคอมโพเนนต์ถูก mount
     window.addEventListener('keydown', handleKeyDown)
 
@@ -110,11 +159,18 @@ function Scan ({ carts, setCarts, discount, setDiscount }) {
     return () => {
       window.removeEventListener('keydown', handleKeyDown)
     }
-  }, [])
-
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [carts])
 
   return (
     <>
+      {/* payment dialog */}
+      <PaymentDialog
+        open={open}
+        handleOpen={handleOpen}
+        totalPrice={totalPrice}
+        totalDiscount={totalDiscount}
+      />
       {/* cart for mobile */}
       <div className='lg:hidden absolute bottom-24 right-7'>
         <div className='absolute inset-0 bg-gradient-to-br from-blue-200 to-purple-200 rounded-full filter blur-[20px]'></div>
@@ -239,18 +295,26 @@ function Scan ({ carts, setCarts, discount, setDiscount }) {
             <div className='flex justify-between mx-6 items-center'>
               <h1>ราคารวม</h1>
               <h1 className='text-[2.5rem] font-bold text-primary'>
-                {((totalPrice - totalDiscount).toLocaleString('en-US'))}
+                {(totalPrice - totalDiscount).toLocaleString('en-US')}
               </h1>
             </div>
           </div>
           <div className='flex gap-2 justify-between w-full'>
-            <div className='w-full'>
-              <button className='btn-warnning w-full py-4'>ยกเลิก (-)</button>
+            <div className='w-full text-center'>
+              <div
+                onClick={() => handleCancel()}
+                className='btn-warnning w-full py-4 cursor-pointer'
+              >
+                ยกเลิก (-)
+              </div>
             </div>
             <div className='w-full'>
-              <button className='btn-primary w-full py-4 text-[1rem]'>
+              <div
+                onClick={totalPrice !== 0 ? handleOpen : null}
+                className='btn-primary w-full py-4 text-[1rem] cursor-pointer text-center'
+              >
                 จ่าย (+)
-              </button>
+              </div>
             </div>
           </div>
         </div>
