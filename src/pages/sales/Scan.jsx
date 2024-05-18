@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react'
 import PaymentDialog from '../../components/sales/PaymentDialog'
 import Swal from 'sweetalert2'
 import Axios from '../../libs/Axios'
-
+import cash from '../../assets/sounds/cash-register-purchase.mp3'
 // eslint-disable-next-line react/prop-types
 function Scan ({ carts, setCarts, discount, setDiscount }) {
   //
@@ -32,6 +32,7 @@ function Scan ({ carts, setCarts, discount, setDiscount }) {
         setOpen(false)
         setCarts([])
         setDiscount([])
+        new Audio(cash).play()
         Swal.fire({
           icon: 'success',
           title: response?.data?.message,

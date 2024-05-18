@@ -6,6 +6,7 @@ import { useAuth } from '../../contexts/AuthProvider'
 import Swal from 'sweetalert2'
 import StyledDiv from '../../components/styleDiv/StyledDiv'
 import useBarcodeScanner from '../../libs/useBarcodeScanner'
+import product_not_found from '../../assets/sounds/product-not-found.mp3'
 
 function Sale () {
   document.title = 'ขายของหน้าร้าน 💸 POSYAYEE'
@@ -117,6 +118,7 @@ function Sale () {
       onClickAddToCart(scannedProduct)
     } else {
       console.log('==== ไม่พบสินค้า! ====')
+      new Audio(product_not_found).play()
     }
   }
 
