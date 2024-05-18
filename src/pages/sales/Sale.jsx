@@ -33,7 +33,12 @@ function Sale () {
         const promotion = existingProduct.promotion
 
         const newDiscount = [
-          { base_price, prod_id: existingProduct.prod_id, promotion }
+          {
+            base_price,
+            prod_name: existingProduct.prod_name,
+            prod_id: existingProduct.prod_id,
+            promotion
+          }
         ]
 
         setDiscount(newDiscount)
@@ -43,6 +48,7 @@ function Sale () {
           existingProduct.prod_sale
         const promotion = existingProduct.promotion
         discount.push({
+          prod_name: existingProduct.prod_name,
           base_price,
           prod_id: existingProduct.prod_id,
           promotion

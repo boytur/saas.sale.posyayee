@@ -6,10 +6,16 @@ import {
   DialogFooter,
   Button
 } from '@material-tailwind/react'
-import { FcMoneyTransfer } from 'react-icons/fc'
-import { FcCurrencyExchange } from 'react-icons/fc'
+import { FcMoneyTransfer, FcCurrencyExchange } from 'react-icons/fc'
 
-const PaymentDialog = ({ open, handleOpen, totalPrice, totalDiscount }) => {
+const PaymentDialog = ({
+  open,
+  handleOpen,
+  totalPrice,
+  totalDiscount,
+  handleConfirmPayment,
+  setBill
+}) => {
   const [paymentMethod, setPaymentMethod] = useState('cash')
   const [money, setMoney] = useState(0)
 
@@ -18,14 +24,26 @@ const PaymentDialog = ({ open, handleOpen, totalPrice, totalDiscount }) => {
     const regex = /^[0-9]*$/
 
     if (regex.test(value)) {
-      setMoney(value)
+      const numValue = parseFloat(value)
+      setMoney(numValue)
+      setBill(prev => ({ ...prev, bill_receive: numValue }))
+      setBill(prev => ({
+        ...prev,
+        bill_change: numValue - (totalPrice - totalDiscount)
+      }))
     }
   }
 
-  const handleKeyDown = e => {
+  const handleKeyDown = async e => {
     // Allow only numeric keys, backspace, and delete
     if (!/[0-9]/.test(e.key) && e.key !== 'Backspace' && e.key !== 'Delete') {
       e.preventDefault()
+    }
+    // Check if the Enter key is pressed
+    if (e.key === 'Enter' && money > 0 && money >= totalPrice - totalDiscount) {
+      e.preventDefault()
+      await handleConfirmPayment()
+      setMoney(0)
     }
   }
 
@@ -43,11 +61,11 @@ const PaymentDialog = ({ open, handleOpen, totalPrice, totalDiscount }) => {
                 <p className='text-sm text-center' htmlFor=''>
                   วิธีการชำระเงิน
                 </p>
-                <div className='flex  gap-4 mt-2'>
+                <div className='flex gap-4 mt-2'>
                   <div
                     className={`btn text-xl flex gap-2 items-center cursor-pointer ${
                       paymentMethod === 'cash'
-                        ? 'border-b-4 border-[#4C49ED] text-primary '
+                        ? 'border-b-4 border-[#4C49ED] text-primary'
                         : ''
                     }`}
                     onClick={() => setPaymentMethod('cash')}
@@ -71,7 +89,7 @@ const PaymentDialog = ({ open, handleOpen, totalPrice, totalDiscount }) => {
             </div>
 
             {paymentMethod === 'cash' && (
-              <>
+              <form onSubmit={handleConfirmPayment}>
                 <div className='mt-6 flex flex-col text-center'>
                   <label htmlFor='' className='text-[2rem]'>
                     ยอดรวม{' '}
@@ -83,13 +101,15 @@ const PaymentDialog = ({ open, handleOpen, totalPrice, totalDiscount }) => {
                   <label htmlFor='' className='text-[2rem]'>
                     เงินทอน{' '}
                     <span className='font-bold'>
-                      {money > 0 && money >= (totalPrice - totalDiscount) ? (
-                        (money - (totalPrice - totalDiscount)).toLocaleString('en-US')
+                      {money > 0 && money >= totalPrice - totalDiscount ? (
+                        (money - (totalPrice - totalDiscount)).toLocaleString(
+                          'en-US'
+                        )
                       ) : (
                         <span>ยอดเงินไม่เพียงพอ</span>
                       )}
                     </span>{' '}
-                    {money > 0 && money >= (totalPrice - totalDiscount) && 'บาท'}
+                    {money > 0 && money >= totalPrice - totalDiscount && 'บาท'}
                   </label>
                 </div>
                 <div className='flex items-center flex-col'>
@@ -99,6 +119,7 @@ const PaymentDialog = ({ open, handleOpen, totalPrice, totalDiscount }) => {
                     </p>
                   </div>
                   <input
+                    required
                     onKeyDown={handleKeyDown}
                     onChange={handleChange}
                     autoFocus
@@ -109,7 +130,7 @@ const PaymentDialog = ({ open, handleOpen, totalPrice, totalDiscount }) => {
                     id=''
                   />
                 </div>
-              </>
+              </form>
             )}
             {paymentMethod === 'credit' && (
               <div className='mt-4'>
@@ -136,7 +157,10 @@ const PaymentDialog = ({ open, handleOpen, totalPrice, totalDiscount }) => {
         >
           <span>ยกเลิก</span>
         </Button>
-        <button className='btn-primary p-[7px] px-6' onClick={handleOpen}>
+        <button
+          className='btn-primary p-[7px] px-6'
+          onClick={handleConfirmPayment}
+        >
           <span>ยืนยัน</span>
         </button>
       </DialogFooter>

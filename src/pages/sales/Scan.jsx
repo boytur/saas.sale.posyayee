@@ -5,9 +5,50 @@ import { MdShoppingCart } from 'react-icons/md'
 import { useEffect, useState } from 'react'
 import PaymentDialog from '../../components/sales/PaymentDialog'
 import Swal from 'sweetalert2'
+import Axios from '../../libs/Axios'
 
 // eslint-disable-next-line react/prop-types
 function Scan ({ carts, setCarts, discount, setDiscount }) {
+  //
+  const [bill, setBill] = useState({
+    bill_receive: 0,
+    bill_change: 0
+  })
+
+  const [open, setOpen] = useState(false)
+  const handleOpen = () => setOpen(!open)
+
+  const handleConfirmPayment = async () => {
+    try {
+      const response = await Axios.post(`/api/product/sale`, {
+        products: carts,
+        discounts: discount,
+        bill_receive: bill.bill_receive,
+        bill_change: bill.bill_change,
+        payment_method: 'cash'
+      })
+
+      if (response.status === 200) {
+        setOpen(false)
+        setCarts([])
+        setDiscount([])
+        Swal.fire({
+          icon: 'success',
+          title: response?.data?.message,
+          timer: 3000
+        })
+      }
+    } catch (err) {
+      console.error(err)
+      setOpen(false)
+      Swal.fire({
+        title: 'เกิดข้อผิดพลาด',
+        text: 'กรุณาลองใหม่อีกครั้ง',
+        icon: 'error'
+      })
+    }
+  }
+
   const incrementQuantity = prod_id => {
     const existingProductIndex = carts.findIndex(
       product => product.prod_id === prod_id
@@ -28,7 +69,12 @@ function Scan ({ carts, setCarts, discount, setDiscount }) {
         const promotion = product.promotion
 
         const newDiscount = [
-          { base_price, prod_id: product.prod_id, promotion }
+          {
+            base_price,
+            prod_name: product.prod_name,
+            prod_id: product.prod_id,
+            promotion
+          }
         ]
 
         setDiscount(newDiscount)
@@ -37,7 +83,12 @@ function Scan ({ carts, setCarts, discount, setDiscount }) {
         const base_price =
           product.promotion.promo_prod_amount * product.prod_sale
         const promotion = product.promotion
-        discount.push({ base_price, prod_id: product.prod_id, promotion })
+        discount.push({
+          base_price,
+          prod_name: product.prod_name,
+          prod_id: product.prod_id,
+          promotion
+        })
         console.log(discount)
       }
     }
@@ -61,19 +112,25 @@ function Scan ({ carts, setCarts, discount, setDiscount }) {
           item.prod_id === prod_id &&
           item.promotion.promo_id === product.promotion.promo_id
       )
-   
-      let cycle  = 0;
-      for(let i = 1 ; i <= product.quantity; i++){
-        if(i % product.promotion.promo_prod_amount === 0) {
-          cycle++;
+
+      let cycle = 0
+      for (let i = 1; i <= product.quantity; i++) {
+        if (i % product.promotion.promo_prod_amount === 0) {
+          cycle++
         }
       }
 
       console.log(discount)
-      console.log("dis2",discount.filter((p)=> p.prod_id === product.prod_id ))
+      console.log(
+        'dis2',
+        discount.filter(p => p.prod_id === product.prod_id)
+      )
       console.log('=========')
 
-      if((discount.filter((p)=> p.prod_id === product.prod_id )).length - cycle === 1){
+      if (
+        discount.filter(p => p.prod_id === product.prod_id).length - cycle ===
+        1
+      ) {
         const updatedDiscount = [...discount]
         updatedDiscount.splice(promoIndex, 1)
         setDiscount(updatedDiscount)
@@ -109,9 +166,6 @@ function Scan ({ carts, setCarts, discount, setDiscount }) {
     }
   }, 0)
 
-  const [open, setOpen] = useState(false)
-  const handleOpen = () => setOpen(!open)
-
   const handleCancel = () => {
     if (totalPrice <= 0) {
       return
@@ -131,6 +185,7 @@ function Scan ({ carts, setCarts, discount, setDiscount }) {
       }
     })
   }
+
   useEffect(() => {
     let totalPrice = carts.reduce(
       (total, item) => total + item.prod_sale * item.quantity,
@@ -159,17 +214,19 @@ function Scan ({ carts, setCarts, discount, setDiscount }) {
     return () => {
       window.removeEventListener('keydown', handleKeyDown)
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [carts])
 
   return (
     <>
       {/* payment dialog */}
       <PaymentDialog
+        handleConfirmPayment={handleConfirmPayment}
         open={open}
         handleOpen={handleOpen}
         totalPrice={totalPrice}
         totalDiscount={totalDiscount}
+        setBill={setBill}
       />
       {/* cart for mobile */}
       <div className='lg:hidden absolute bottom-24 right-7'>
