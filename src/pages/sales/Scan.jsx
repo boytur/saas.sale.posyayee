@@ -201,11 +201,6 @@ function Scan ({ carts, setCarts, discount, setDiscount }) {
           handleOpen()
         }
       }
-      if (event.keyCode === 109 || event.key === '-' || event.key === 'ข') {
-        if (totalPrice !== 0) {
-          handleCancel()
-        }
-      }
     }
 
     // เพิ่ม event listener เมื่อคอมโพเนนต์ถูก mount
@@ -363,7 +358,7 @@ function Scan ({ carts, setCarts, discount, setDiscount }) {
                 onClick={() => handleCancel()}
                 className='btn-warnning w-full py-4 cursor-pointer'
               >
-                ยกเลิก (-)
+                ยกเลิก
               </div>
             </div>
             <div className='w-full'>
