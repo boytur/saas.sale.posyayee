@@ -260,7 +260,7 @@ function Histories () {
               </tr>
             </thead>
             <tbody className='bg-white'>
-              {pageState?.data?.biils?.map(
+              {pageState.data?.bills?.map(
                 (
                   {
                     bill_no,
