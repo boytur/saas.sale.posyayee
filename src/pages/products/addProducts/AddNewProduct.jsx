@@ -117,6 +117,7 @@ function AddNewProduct ({ categories, units }) {
           cat_id: '',
           unit_id: ''
         })
+        setImageFile()
         setIsLoading(false)
       }
     } catch (err) {
@@ -343,7 +344,9 @@ function AddNewProduct ({ categories, units }) {
                   />
                 </svg>
                 <p className='mb-2 text-sm text-gray-500 '>
-                  <span className='font-semibold'>คลิ๊กหรือลากวางรูปภาพสินค้า</span>
+                  <span className='font-semibold'>
+                    คลิ๊กหรือลากวางรูปภาพสินค้า
+                  </span>
                 </p>
                 <p className='text-xs text-gray-500 '>
                   รองรับไฟล์ภาพ PNG, JPG, JPEG และ GIF ขนาดไม่เกิน 2MB
