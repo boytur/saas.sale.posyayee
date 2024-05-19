@@ -287,9 +287,9 @@ function AddNewProduct ({ categories, units }) {
         </div>
 
         {/* save btn */}
-        <button
+        <div
           onClick={!isLoading ? () => handleSaveProduct() : null}
-          className='btn-primary w-full mt-12 p-3 mb-6'
+          className='btn-primary w-full mt-12 p-3 mb-6 text-center cursor-pointer'
         >
           {isLoading ? (
             <div className='flex justify-center my-1'>
@@ -298,7 +298,7 @@ function AddNewProduct ({ categories, units }) {
           ) : (
             'บันทึก'
           )}
-        </button>
+        </div>
       </div>
 
       {/* image */}
