@@ -9,6 +9,7 @@ import formatUTCtoThaiWithTime from '../../libs/formatUTCtoThaiWithTime.js'
 import Pagination from '../../components/pagination/Pagination.jsx'
 import Permission from '../../libs/Permission.js'
 
+
 const TABLE_HEAD = [
   'ลำดับ',
   'เลขบิล',
@@ -203,6 +204,7 @@ function Histories () {
                 เรียงตาม
               </label>
               <select
+                value={pageState.sortBy}
                 onChange={e =>
                   setPageState({ ...pageState, sortBy: e.target.value })
                 }
@@ -224,6 +226,7 @@ function Histories () {
                 เรียงจาก
               </label>
               <select
+                value={pageState.sort}
                 onChange={e =>
                   setPageState({ ...pageState, sort: e.target.value })
                 }
