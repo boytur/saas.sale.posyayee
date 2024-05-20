@@ -2,18 +2,31 @@
 import { RiDeleteBin5Line } from 'react-icons/ri'
 import { CiCircleMinus, CiCirclePlus } from 'react-icons/ci'
 import { MdShoppingCart } from 'react-icons/md'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import PaymentDialog from '../../components/sales/PaymentDialog'
 import Swal from 'sweetalert2'
 import Axios from '../../libs/Axios'
 import cash from '../../assets/sounds/cash-register-purchase.mp3'
+import { useReactToPrint } from 'react-to-print'
+import Bill from '../../components/sales/Bill'
+import userDecode from '../../libs/userDecode'
+
 // eslint-disable-next-line react/prop-types
 function Scan ({ carts, setCarts, discount, setDiscount }) {
   //
+
+  const componentRef = useRef()
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current
+  })
+
   const [bill, setBill] = useState({
     bill_receive: 0,
     bill_change: 0
   })
+
+  const [billNo, setBillNo] = useState()
+  const [isPrint, setIsPrint] = useState(userDecode()?.user?.setting.stt_alway_print)
 
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(!open)
@@ -29,15 +42,15 @@ function Scan ({ carts, setCarts, discount, setDiscount }) {
       })
 
       if (response.status === 200) {
-        setOpen(false)
-        setCarts([])
-        setDiscount([])
+        setBillNo(response.data.bill_no)
         new Audio(cash).play()
-        Swal.fire({
-          icon: 'success',
-          title: response?.data?.message,
-          timer: 3000
-        })
+        if (!isPrint) {
+          Swal.fire({
+            icon: 'success',
+            title: response?.data?.message,
+            timer: 3000
+          })
+        }
       }
     } catch (err) {
       console.error(err)
@@ -213,6 +226,17 @@ function Scan ({ carts, setCarts, discount, setDiscount }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [carts])
 
+  useEffect(() => {
+    if (isPrint && billNo) {
+      handlePrint()
+      setOpen(false)
+      setCarts([])
+      setDiscount([])
+      setBillNo()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [billNo])
+
   return (
     <>
       {/* payment dialog */}
@@ -224,6 +248,18 @@ function Scan ({ carts, setCarts, discount, setDiscount }) {
         totalDiscount={totalDiscount}
         setBill={setBill}
       />
+      {billNo && print && (
+        <div>
+          <Bill
+            ref={componentRef}
+            carts={carts}
+            discount={discount}
+            totalPrice={totalPrice}
+            totalDiscount={totalDiscount}
+            billNo={billNo}
+          />
+        </div>
+      )}
       {/* cart for mobile */}
       <div className='lg:hidden absolute bottom-24 right-7'>
         <div className='absolute inset-0 bg-gradient-to-br from-blue-200 to-purple-200 rounded-full filter blur-[20px]'></div>
