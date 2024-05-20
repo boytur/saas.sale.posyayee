@@ -255,7 +255,7 @@ function Histories () {
                 <option value=''>ทุกคน</option>
                 {pageState?.storeUser?.map(user => (
                   <option key={user.user_id} value={user.user_id}>
-                    {user.user_fname}
+                    {user.user_fname ? user.user_fname : user.user_phone}
                   </option>
                 ))}
               </select>
