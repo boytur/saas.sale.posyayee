@@ -7,6 +7,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom'
 import { Card } from '@material-tailwind/react'
 import formatUTCtoThaiWithTime from '../../libs/formatUTCtoThaiWithTime.js'
 import Pagination from '../../components/pagination/Pagination.jsx'
+import Permission from '../../libs/Permission.js'
 
 const TABLE_HEAD = [
   'ลำดับ',
@@ -53,33 +54,43 @@ function Histories () {
     category: [],
     page: searchParams.get('page') || 1,
     pageSize: searchParams.get('perPage') || 100,
+    sort: searchParams.get('sort') || 'DESC',
+    sortBy: searchParams.get('sortBy') || 'createdAt',
+    search: searchParams.get('search') || '',
     total: 0,
-    loading: false
+    loading: false,
+    storeUser: []
   })
 
   const fetchBillHistory = async () => {
     try {
-      setPageState(prevState => ({
-        ...prevState,
-        loading: true
-      }))
-
-      const response = await Axios.get('/api/analytic/products/bill', {
-        params: {
-          page: pageState.page,
-          perPage: pageState.pageSize,
-          start: start,
-          end: end
-        }
-      })
-
-      if (response.status === 200) {
+      const permission = new Permission()
+      if (permission.canViewHistory()) {
         setPageState(prevState => ({
           ...prevState,
-          data: response.data,
-          total: response.data.total,
-          loading: false
+          loading: true
         }))
+
+        const response = await Axios.get('/api/analytic/products/bill', {
+          params: {
+            page: pageState.page,
+            perPage: pageState.pageSize,
+            sort: pageState.sort,
+            sortBy: pageState.sortBy,
+            search: pageState.search,
+            start: start,
+            end: end
+          }
+        })
+
+        if (response.status === 200) {
+          setPageState(prevState => ({
+            ...prevState,
+            data: response.data,
+            total: response.data.total,
+            loading: false
+          }))
+        }
       }
     } catch (err) {
       console.error(err)
@@ -95,6 +106,23 @@ function Histories () {
     }
   }
 
+  const fetchStoreUser = async () => {
+    try {
+      const permission = new Permission()
+      if (permission.canViewStoreUser()) {
+        const response = await Axios.get('/api/analytic/users')
+        if (response.status === 200) {
+          setPageState(prevState => ({
+            ...prevState,
+            storeUser: response.data.users
+          }))
+        }
+      }
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
   useEffect(() => {
     fetchBillHistory()
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -105,13 +133,15 @@ function Histories () {
 
     newSearchParams.set('page', pageState.page)
     newSearchParams.set('perPage', pageState.pageSize)
+    newSearchParams.set('sort', pageState.sort)
+    newSearchParams.set('sortBy', pageState.sortBy)
     newSearchParams.set('start', start)
     newSearchParams.set('end', end)
 
     navigate(`/history?${newSearchParams}`)
-
+    fetchStoreUser()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pageState.pageSize, pageState.page])
+  }, [pageState.pageSize, pageState.page,pageState.sort, pageState.sortBy,start,end])
 
   const totalPages = Math.ceil(pageState.total / pageState.pageSize)
 
@@ -172,11 +202,19 @@ function Histories () {
               <label htmlFor='' className='text-[0.7rem] ml-1 text-black/80'>
                 เรียงตาม
               </label>
-              <select name='' className='input-primary cursor-pointer' id=''>
-                <option value=''>ทุกคน</option>
-                <option value=''>user-1</option>
-                <option value=''>user-1</option>
-                <option value=''>user-1</option>
+              <select
+                onChange={e =>
+                  setPageState({ ...pageState, sortBy: e.target.value })
+                }
+                name=''
+                className='input-primary cursor-pointer'
+                id=''
+              >
+                <option value='bill_no'>เลขบิล</option>
+                <option value='bill_all_amount'>ยอดทั้งหมด</option>
+                <option value='bill_all_discount'>ส่วนลด</option>
+                <option value='bill_all_profit'>กำไร</option>
+                <option value='createdAt'>เวลาขาย</option>
               </select>
             </div>
 
@@ -185,11 +223,16 @@ function Histories () {
               <label htmlFor='' className='text-[0.7rem] ml-1 text-black/80'>
                 เรียงจาก
               </label>
-              <select name='' className='input-primary cursor-pointer' id=''>
-                <option value=''>ทุกคน</option>
-                <option value=''>user-1</option>
-                <option value=''>user-1</option>
-                <option value=''>user-1</option>
+              <select
+                onChange={e =>
+                  setPageState({ ...pageState, sort: e.target.value })
+                }
+                name=''
+                className='input-primary cursor-pointer'
+                id=''
+              >
+                <option value='DESC'>มากไปน้อย</option>
+                <option value='ASC'>น้อยไปมาก</option>
               </select>
             </div>
 
@@ -198,11 +241,20 @@ function Histories () {
               <label htmlFor='' className='text-[0.7rem] ml-1 text-black/80'>
                 คนขาย
               </label>
-              <select name='' className='input-primary cursor-pointer' id=''>
+              <select
+                onChange={e => {
+                  setPageState({ ...pageState, search: e.target.value })
+                }}
+                name=''
+                className='input-primary cursor-pointer'
+                id=''
+              >
                 <option value=''>ทุกคน</option>
-                <option value=''>user-1</option>
-                <option value=''>user-1</option>
-                <option value=''>user-1</option>
+                {pageState?.storeUser?.map(user => (
+                  <option key={user.user_id} value={user.user_id}>
+                    {user.user_fname}
+                  </option>
+                ))}
               </select>
             </div>
 
