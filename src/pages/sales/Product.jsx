@@ -1,5 +1,6 @@
 import { CiSearch } from 'react-icons/ci'
 import barcode_scanner_beep_sound from '../../assets/sounds/barcode-scanner-beep-sound.mp3'
+import userDecode from '../../libs/userDecode'
 
 /* eslint-disable react/prop-types */
 function Product ({ products, categories, onClickAddToCart, isLoading }) {
@@ -61,7 +62,10 @@ function Product ({ products, categories, onClickAddToCart, isLoading }) {
             {productNobarcode?.map(product => (
               <div
                 onClick={() => {
-                  new Audio(barcode_scanner_beep_sound).play()
+                  {
+                    userDecode()?.user?.setting?.stt_peep_sound &&
+                      new Audio(barcode_scanner_beep_sound).play()
+                  }
                   onClickAddToCart(product)
                 }}
                 key={product.prod_id}
