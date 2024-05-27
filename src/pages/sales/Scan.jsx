@@ -26,7 +26,7 @@ function Scan ({ carts, setCarts, discount, setDiscount }) {
   })
 
   const [billNo, setBillNo] = useState()
-  const [isPrint, setIsPrint] = useState(userDecode()?.user?.setting.stt_alway_print)
+  const [isPrint] = useState(userDecode()?.user?.setting.stt_alway_print)
 
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(!open)
