@@ -6,7 +6,16 @@ import formatCurrency from '../../libs/formatCurrency.js'
 
 // eslint-disable-next-line react/display-name
 const CopyBill = forwardRef((props, ref) => {
-  const { carts, totalPrice, totalDiscount, billNo, bill_receive,bill_change, date } = props
+  const {
+    carts,
+    totalPrice,
+    totalDiscount,
+    billNo,
+    bill_receive,
+    bill_change,
+    date,
+    seller
+  } = props
 
   return (
     <div ref={ref} className='' style={{ width: '60mm' }}>
@@ -41,9 +50,7 @@ const CopyBill = forwardRef((props, ref) => {
           </h2>
           <h2>
             <span className='font-bold'>พนักงาน: </span>
-            {userDecode()?.user?.user_fname
-              ? userDecode()?.user?.user_fname
-              : userDecode()?.user?.user_phone}
+            {seller || 'พนักงานอาจโดนลบไปแล้ว'}
           </h2>
         </div>
         <hr className='mt-2' />
@@ -66,9 +73,18 @@ const CopyBill = forwardRef((props, ref) => {
                   <td className='text-start truncate max-w-16'>
                     {prod.bill_detail_prod_name}
                   </td>
-                  <td>{formatCurrency((prod.bill_detail_amount)/(prod.bill_detail_quantity))}</td>
+                  <td>
+                    {formatCurrency(
+                      prod.bill_detail_amount / prod.bill_detail_quantity
+                    )}
+                  </td>
                   <td>{prod.bill_detail_quantity}</td>
-                  <td>{formatCurrency((prod.bill_detail_amount)/(prod.bill_detail_quantity) * prod.bill_detail_quantity)}</td>
+                  <td>
+                    {formatCurrency(
+                      (prod.bill_detail_amount / prod.bill_detail_quantity) *
+                        prod.bill_detail_quantity
+                    )}
+                  </td>
                 </tr>
               ))}
             </tbody>
