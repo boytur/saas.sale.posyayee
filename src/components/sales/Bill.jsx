@@ -2,18 +2,11 @@
 import { forwardRef } from 'react'
 import formatUTCtoThaiWithTime from '../../libs/formatUTCtoThaiWithTime.js'
 import userDecode from '../../libs/userDecode'
+import formatCurrency from '../../libs/formatCurrency.js'
 
 // eslint-disable-next-line react/display-name
 const Bill = forwardRef((props, ref) => {
-  const { carts, discount, totalPrice, totalDiscount, billNo } = props
-  console.log(discount)
-
-  const formatCurrency = amount => {
-    return amount.toLocaleString('en-US', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    })
-  }
+  const { carts, discount, totalPrice, totalDiscount, billNo, bill } = props
 
   return (
     <div ref={ref} className='' style={{ width: '60mm' }}>
@@ -120,6 +113,15 @@ const Bill = forwardRef((props, ref) => {
             <div className='w-full flex justify-between font-bold text-md'>
               <p>รวมสุทธิ</p>
               <p>{formatCurrency(totalPrice - totalDiscount)}</p>
+            </div>
+            <h1>===============================</h1>
+            <div className='w-full flex justify-between'>
+              <p>รับมา</p>
+              <p>{formatCurrency(bill.bill_receive)}</p>
+            </div>
+            <div className='w-full flex justify-between'>
+              <p>เงินทอน</p>
+              <p>{formatCurrency(bill.bill_change)}</p>
             </div>
           </div>
         </div>

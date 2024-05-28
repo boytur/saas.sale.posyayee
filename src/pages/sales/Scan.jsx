@@ -277,6 +277,7 @@ function Scan ({ carts, setCarts, discount, setDiscount }) {
             totalPrice={totalPrice}
             totalDiscount={totalDiscount}
             billNo={billNo}
+            bill={bill}
           />
         </div>
       )}
