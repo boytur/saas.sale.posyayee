@@ -2,7 +2,7 @@ import Swal from 'sweetalert2'
 import StyledDiv from '../../components/styleDiv/StyledDiv'
 import { HiOutlineMagnifyingGlass } from 'react-icons/hi2'
 import Axios from '../../libs/Axios.js'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { Card } from '@material-tailwind/react'
 import formatUTCtoThaiWithTime from '../../libs/formatUTCtoThaiWithTime.js'
@@ -33,8 +33,13 @@ function Histories () {
   const [start, setStart] = useState(() => {
     if (!searchParams.get('start')) {
       const currentDate = new Date()
-      currentDate.setUTCHours(17, 0, 0, 0)
-      currentDate.setDate(currentDate.getDate() - 1)
+
+      if (currentDate.getUTCHours() >= 17) {
+        currentDate.setUTCHours(17, 0, 0, 1)
+      } else {
+        currentDate.setDate(currentDate.getDate() + 1)
+        currentDate.setHours(17, 0, 0, 1)
+      }
       return currentDate.toISOString()
     } else {
       return searchParams.get('start')
@@ -44,6 +49,7 @@ function Histories () {
   const [end, setEnd] = useState(() => {
     if (!searchParams.get('end')) {
       const currentDate = new Date()
+      currentDate.setHours(currentDate.getHours() + 5)
       return currentDate.toISOString()
     } else {
       return searchParams.get('end')
@@ -160,14 +166,15 @@ function Histories () {
 
   const setStartDateFromDatePickup = start => {
     const newStartDate = new Date(start)
-    newStartDate.setUTCHours(17, 0, 0, 1)
-    newStartDate.setDate(newStartDate.getDate() - 1)
+    newStartDate.setUTCHours(0, 0, 0, 0) // Set to the beginning of the day in local time
+    newStartDate.setTime(newStartDate.getTime() - 7 * 60 * 60 * 1000) // Adjust for UTC+7
     setStart(newStartDate.toISOString())
   }
 
   const setEndDateFromDatePickup = end => {
     const newEndDate = new Date(end)
-    newEndDate.setUTCHours(16, 59, 59, 59)
+    newEndDate.setUTCHours(23, 59, 59, 999) // Set to the end of the day in local time
+    newEndDate.setTime(newEndDate.getTime() - 7 * 60 * 60 * 1000) // Adjust for UTC+7
     setEnd(newEndDate.toISOString())
   }
 
