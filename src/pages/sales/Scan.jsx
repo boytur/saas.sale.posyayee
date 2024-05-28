@@ -10,51 +10,62 @@ import cash from '../../assets/sounds/cash-register-purchase.mp3'
 import { useReactToPrint } from 'react-to-print'
 import Bill from '../../components/sales/Bill'
 import userDecode from '../../libs/userDecode'
+import Permission from '../../libs/Permission'
 
 // eslint-disable-next-line react/prop-types
 function Scan ({ carts, setCarts, discount, setDiscount }) {
-  //
-
+  // component ref for printing
   const componentRef = useRef()
   const handlePrint = useReactToPrint({
     content: () => componentRef.current
   })
 
+  // recieved and change
   const [bill, setBill] = useState({
     bill_receive: 0,
     bill_change: 0
   })
 
+  // bill nunber for printing and is print setting
   const [billNo, setBillNo] = useState()
   const [isPrint] = useState(userDecode()?.user?.setting.stt_alway_print)
 
+  // modal dialog payments for cash
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(!open)
 
+  const [submit, setSubmit] = useState(false)
   const handleConfirmPayment = async () => {
     try {
-      const response = await Axios.post(`/api/product/sale`, {
-        products: carts,
-        discounts: discount,
-        bill_receive: bill.bill_receive,
-        bill_change: bill.bill_change,
-        payment_method: 'cash'
-      })
+      const permission = new Permission()
+      if (permission.canSellProducts() && !submit) {
+        setSubmit(true)
+        const response = await Axios.post(`/api/product/sale`, {
+          products: carts,
+          discounts: discount,
+          bill_receive: bill.bill_receive,
+          bill_change: bill.bill_change,
+          payment_method: 'cash'
+        })
 
-      if (response.status === 200) {
-        setBillNo(response.data.bill_no)
-        new Audio(cash).play()
-        if (!isPrint) {
-          Swal.fire({
-            icon: 'success',
-            title: response?.data?.message,
-            timer: 3000
-          })
+        if (response.status === 200) {
+          setBillNo(response.data.bill_no)
+          new Audio(cash).play()
+
+          // if not print show popup message success
+          if (!isPrint) {
+            Swal.fire({
+              icon: 'success',
+              title: response?.data?.message,
+              timer: 3000
+            })
+            setSubmit(false)
+          }
         }
       }
     } catch (err) {
-      console.error(err)
       setOpen(false)
+      setSubmit(false)
       Swal.fire({
         title: 'เกิดข้อผิดพลาด',
         text: 'กรุณาลองใหม่อีกครั้ง',
@@ -63,6 +74,7 @@ function Scan ({ carts, setCarts, discount, setDiscount }) {
     }
   }
 
+  // increase product quantity in carts
   const incrementQuantity = prod_id => {
     const existingProductIndex = carts.findIndex(
       product => product.prod_id === prod_id
@@ -108,6 +120,7 @@ function Scan ({ carts, setCarts, discount, setDiscount }) {
     }
   }
 
+  // decrease product quantity in carts
   const decrementQuantity = prod_id => {
     const existingProductIndex = carts.findIndex(
       product => product.prod_id === prod_id
@@ -152,6 +165,7 @@ function Scan ({ carts, setCarts, discount, setDiscount }) {
     }
   }
 
+  // delete product from carts
   const deleteProductFromCart = prod_id => {
     const indexToDelete = carts.findIndex(prod => prod.prod_id === prod_id)
     if (indexToDelete !== -1) {
@@ -167,11 +181,13 @@ function Scan ({ carts, setCarts, discount, setDiscount }) {
     }
   }
 
+  // calculate total price
   let totalPrice = carts.reduce(
     (total, item) => total + item.prod_sale * item.quantity,
     0
   )
 
+  //calculate total discount
   let totalDiscount = discount?.reduce((total, item) => {
     if (item.promotion) {
       return total + (item.base_price - item.promotion.promo_prod_price)
@@ -180,6 +196,7 @@ function Scan ({ carts, setCarts, discount, setDiscount }) {
     }
   }, 0)
 
+  // handle cancel sale
   const handleCancel = () => {
     if (totalPrice <= 0) {
       return
@@ -233,6 +250,8 @@ function Scan ({ carts, setCarts, discount, setDiscount }) {
       setCarts([])
       setDiscount([])
       setBillNo()
+      setSubmit(false)
+      console.log(bill)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [billNo])
@@ -248,6 +267,7 @@ function Scan ({ carts, setCarts, discount, setDiscount }) {
         totalDiscount={totalDiscount}
         setBill={setBill}
       />
+      {/* if has bill no and print */}
       {billNo && print && (
         <div>
           <Bill

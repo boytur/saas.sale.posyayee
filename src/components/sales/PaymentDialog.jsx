@@ -58,9 +58,7 @@ const PaymentDialog = ({
           <div className='w-full'>
             <div className='flex justify-center'>
               <div>
-                <p className='text-sm text-center' htmlFor=''>
-                  วิธีการชำระเงิน
-                </p>
+                <p className='text-sm text-center'>วิธีการชำระเงิน</p>
                 <div className='flex gap-4 mt-2'>
                   <div
                     className={`btn text-xl flex gap-2 items-center cursor-pointer ${
@@ -159,7 +157,10 @@ const PaymentDialog = ({
         </Button>
         <button
           className='btn-primary p-[7px] px-6'
-          onClick={handleConfirmPayment}
+          onClick={() => {
+            handleConfirmPayment()
+            setMoney(0)
+          }}
         >
           <span>ยืนยัน</span>
         </button>
