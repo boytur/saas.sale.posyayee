@@ -10,35 +10,35 @@ function Card ({ cashFlow }) {
   const cashFlowData = [
     {
       key: 'amount',
-      data: `฿${formatCurrency(cashFlow?.all_cash_flows?.amount)}`,
+      data: `฿${formatCurrency(cashFlow?.all_cash_flows?.amount) || 'กำลังโหลด...'}`,
       style: 'border-b-blue-700 border-b-[5px] text-blue-900',
       icon: <FcCurrencyExchange size={50} />,
       title: 'ยอดขายทั้งหมด'
     },
     {
       key: 'cash',
-      data: `฿${formatCurrency(cashFlow?.all_cash_flows?.cash)}`,
+      data: `฿${formatCurrency(cashFlow?.all_cash_flows?.cash) || 'กำลังโหลด...'}`,
       style: 'border-b-purple-900 border-b-[5px] text-purple-900',
       icon: <FcMoneyTransfer size={50} />,
       title: 'เงินสด'
     },
     {
       key: 'credit',
-      data: `฿${formatCurrency(cashFlow?.all_cash_flows?.credit)}`,
+      data: `฿${formatCurrency(cashFlow?.all_cash_flows?.credit) || 'กำลังโหลด...'}`,
       style: 'border-b-gray-500 border-b-[5px] text-black',
       icon: <FcSurvey size={50} />,
       title: 'เครดิต'
     },
     {
       key: 'profit',
-      data: `฿${formatCurrency(cashFlow?.all_cash_flows?.profit)}`,
+      data: `฿${formatCurrency(cashFlow?.all_cash_flows?.profit) || 'กำลังโหลด...'}`,
       style: 'border-b-green-700 border-b-[5px] text-green-600',
       icon: <FcBullish size={50} />,
       title: 'กำไร'
     },
     {
       key: 'bill',
-      data: cashFlow?.total,
+      data: cashFlow?.total || 'กำลังโหลด...',
       style: 'border-b-orange-900 border-b-[5px]  text-orange-900',
       icon: <FcViewDetails size={50} />,
       title: 'บิลทั้งหมด'
