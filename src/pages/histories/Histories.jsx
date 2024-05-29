@@ -38,7 +38,7 @@ function Histories () {
         currentDate.setUTCHours(17, 0, 0, 1)
       } else {
         currentDate.setDate(currentDate.getDate() - 1)
-        currentDate.setHours(17, 0, 0, 1)
+        currentDate.setHours(24, 0, 0, 0)
       }
       return currentDate.toISOString()
     } else {
