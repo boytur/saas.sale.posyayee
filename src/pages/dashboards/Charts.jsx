@@ -3,10 +3,9 @@ import formatTime from '../../libs/formatTime'
 import formatUTCtoThai from '../../libs/formatUTCtoThai'
 import Chart from 'react-apexcharts'
 
-function Charts ({cashFlow}) {
+function Charts ({ cashFlow }) {
   const convertToLocalTime = utcDate => {
-    const localDate = new Date(utcDate)
-    localDate.setHours(localDate.getHours() + 7)
+    const localDate = formatUTCtoThai(utcDate)
     return localDate
   }
 
@@ -15,9 +14,9 @@ function Charts ({cashFlow}) {
     return dates.every(date => {
       const currentDate = convertToLocalTime(date)
       return (
-        firstDate.getFullYear() === currentDate.getFullYear() &&
-        firstDate.getMonth() === currentDate.getMonth() &&
-        firstDate.getDate() === currentDate.getDate()
+        currentDate.split(',')[0] === firstDate.split(',')[0] &&
+        currentDate.split(',')[1] === firstDate.split(',')[1] &&
+        currentDate.split(',')[2] === firstDate.split(',')[2]
       )
     })
   }
