@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import Navbar from './components/navbar/Navbar';
 import Sidebar from './components/sidebar/Sidebar';
 import Sale from './pages/sales';
-import Dashboard from './pages/dashboards/Dashboard';
+import Dashboard from './pages/dashboards';
 import Product from './pages/products';
 import Histories from "./pages/histories/Histories";
 import Finance from "./pages/finances/Finance";
