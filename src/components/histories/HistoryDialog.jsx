@@ -128,8 +128,13 @@ function HistoryDialog ({ billId, isOpenBillDetail, handleOpen }) {
                 <div className='flex m-2'>
                   <div className='font-bold'>พนักงาน&nbsp;</div>
                   <div>
-                    {billDetails?.bill?.bill?.user?.user_fname ||
-                      'ไม่พบพนักงาน หรือพนักงานโดนลบ'}
+                    {billDetails?.bill?.bill?.user
+                      ? billDetails.bill.bill.user.user_fname ||
+                        billDetails.bill.bill.user.user_phone
+                        ? billDetails.bill.bill.user.user_fname ||
+                          billDetails.bill.bill.user.user_phone
+                        : 'ไม่พบพนักงาน หรือพนักงานโดนลบ'
+                      : 'ไม่พบพนักงาน หรือพนักงานโดนลบ'}
                   </div>
                 </div>
               </div>
