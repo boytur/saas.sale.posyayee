@@ -38,7 +38,7 @@ function Card ({ cashFlow }) {
     },
     {
       key: 'bill',
-      data: cashFlow?.total || 'กำลังโหลด...',
+      data: cashFlow?.total >= 0 ? cashFlow?.total  : 'กำลังโหลด...',
       style: 'border-b-orange-900 border-b-[5px]  text-orange-900',
       icon: <FcViewDetails size={50} />,
       title: 'บิลทั้งหมด'
