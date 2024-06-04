@@ -49,7 +49,17 @@ function Scan ({ carts, setCarts, discount, setDiscount }) {
         })
 
         if (response.status === 200) {
-          setBillNo(response.data.bill_no)
+          
+          if (isPrint) {
+            setBillNo(response.data.bill_no)
+          } else {
+            setOpen(false)
+            setCarts([])
+            setDiscount([])
+            setBillNo()
+            setSubmit(false)
+          }
+
           new Audio(cash).play()
 
           // if not print show popup message success
@@ -251,7 +261,6 @@ function Scan ({ carts, setCarts, discount, setDiscount }) {
       setDiscount([])
       setBillNo()
       setSubmit(false)
-      console.log(bill)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [billNo])
@@ -268,7 +277,7 @@ function Scan ({ carts, setCarts, discount, setDiscount }) {
         setBill={setBill}
       />
       {/* if has bill no and print */}
-      {billNo && print && (
+      {billNo && isPrint && (
         <div>
           <Bill
             ref={componentRef}
